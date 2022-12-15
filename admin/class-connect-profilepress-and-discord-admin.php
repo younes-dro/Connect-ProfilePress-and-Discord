@@ -74,6 +74,8 @@ class Connect_Profilepress_And_Discord_Admin {
 		 */
 
 		$min_css = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min';
+		wp_register_style( $this->plugin_name . 'skeletabs.css', plugin_dir_url( __FILE__ ) . 'css/skeletabs.css', array(), $this->version, 'all' );
+		wp_register_style( $this->plugin_name . 'select2.css', plugin_dir_url( __FILE__ ) . 'css/select2.min.css', array(), $this->version, 'all' );
 		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/connect-profilepress-and-discord-admin' . $min_css . '.css', array(), $this->version, 'all' );
 
 	}
@@ -98,7 +100,16 @@ class Connect_Profilepress_And_Discord_Admin {
 		 */
 
 		$min_js = ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) ? '' : '.min';
+		wp_register_script( $this->plugin_name . 'select2.js', plugin_dir_url( __FILE__ ) . 'js/select2.min.js', array( 'jquery' ), $this->version, false );
+		wp_register_script( $this->plugin_name . 'skeletabs.js', plugin_dir_url( __FILE__ ) . 'js/skeletabs.js', array( 'jquery' ), $this->version, false );
 		wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/connect-profilepress-and-discord-admin' . $min_js . '.js', array( 'jquery' ), $this->version, false );
+		$script_params = array(
+			'admin_ajax'                     => admin_url( 'admin-ajax.php' ),
+			'permissions_const'              => ETS_PROFILEPRESS_DISCORD_BOT_PERMISSIONS,
+			'is_admin'                       => is_admin(),
+			'ets_profilepress_discord_nonce' => wp_create_nonce( 'ets-profilepress-discord-ajax-nonce' ),
+		);
+		wp_localize_script( $this->plugin_name, 'ets_profilepress_js_params', $script_params );
 
 	}
 
@@ -122,9 +133,16 @@ class Connect_Profilepress_And_Discord_Admin {
 			wp_send_json_error( 'You do not have sufficient rights', 403 );
 			exit();
 		}
-
+		wp_enqueue_style( $this->plugin_name . 'skeletabs.css' );
+		wp_enqueue_style( $this->plugin_name . 'select2.css' );
 		wp_enqueue_style( $this->plugin_name );
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'jquery-ui-draggable' );
+		wp_enqueue_script( 'jquery-ui-droppable' );
+		wp_enqueue_script( $this->plugin_name . 'select2.js' );
+		wp_enqueue_script( $this->plugin_name . 'skeletabs.js' );
 		wp_enqueue_script( $this->plugin_name );
+		require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/connect-profilepress-and-discord-admin-display.php';
 	}
 
 }

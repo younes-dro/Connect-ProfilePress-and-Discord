@@ -3,8 +3,7 @@
 	if (etsProfilePressParams.is_admin) {
 		$(document).ready(function(){
 		if(jQuery().select2) {
-			console.log(etsProfilePressParams);
-			return;
+
 			$('#ets_profilepress_discord_redirect_url').select2({ width: 'resolve' });
                 $('#ets_profilepress_discord_redirect_url').on('change', function(){
 				$.ajax({

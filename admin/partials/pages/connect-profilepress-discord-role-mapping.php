@@ -3,6 +3,7 @@
 $ets_active_plans = ets_profilepress_discord_get_active_plans();
 
 $connect_profilepress_default_role = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_default_role_id' ) ) );
+$allow_none_customer               = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_allow_none_customer' ) ) );
 ?>
 <div class="notice notice-warning ets-notice">
 	<p><i class='fas fa-info'></i> <?php esc_html_e( 'Drag and Drop the Discord Roles over to the ProfilePress Plans', 'connect-profilepress-and-discord' ); ?></p>
@@ -53,7 +54,26 @@ $connect_profilepress_default_role = sanitize_text_field( trim( get_option( 'ets
 		  <p class="description"><?php esc_html_e( 'This Role will be assigned to all Plans', 'connect-profilepress-and-discord' ); ?></p>
 		</td>
 	  </tr>        
-
+	  <tr>
+		<th scope="row"><label><?php esc_html_e( 'Allow non-customer', 'connect-profilepress-and-discord' ); ?></label></th>
+		<td>
+		  <fieldset>
+		  <label><input type="radio" name="allow_none_customer" value="yes"  
+		  <?php
+			if ( $allow_none_customer == 'yes' ) {
+				echo esc_attr( 'checked="checked"' ); }
+			?>
+			 > <span><?php esc_html_e( 'Yes', 'connect-profilepress-and-discord' ); ?></span></label><br>
+		  <label><input type="radio" name="allow_none_customer" value="no" 
+		  <?php
+			if ( empty( $allow_none_customer ) || $allow_none_customer == 'no' ) {
+				echo esc_attr( 'checked="checked"' ); }
+			?>
+			 > <span><?php esc_html_e( 'No', 'connect-profilepress-and-discord' ); ?></span></label>
+		  <p class="description"><?php esc_html_e( 'Display connect button to normal WordPress site users having ProfilePress account', 'connect-profilepress-and-discord' ); ?></p>
+		  </fieldset>
+		</td>
+	  </tr>  
 	</tbody>
   </table>
 	<br>

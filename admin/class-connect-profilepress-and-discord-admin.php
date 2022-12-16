@@ -333,10 +333,14 @@ class Connect_Profilepress_And_Discord_Admin {
 		$ets_discord_roles                        = stripslashes( $ets_discord_roles );
 		$save_mapping_status                      = update_option( 'ets_profilepress_discord_role_mapping', $ets_discord_roles );
 		$ets_current_url                          = sanitize_text_field( trim( $_POST['current_url'] ) );
+		$allow_none_customer                      = isset( $_POST['allow_none_customer'] ) ? sanitize_textarea_field( trim( $_POST['allow_none_customer'] ) ) : '';
 		if ( isset( $_POST['ets_profilepress_discord_role_mappings_nonce'] ) && wp_verify_nonce( $_POST['ets_profilepress_discord_role_mappings_nonce'], 'profilepress_discord_role_mappings_nonce' ) ) {
 			if ( ( $save_mapping_status || isset( $_POST['ets_profilepress_discord_role_mapping'] ) ) && ! isset( $_POST['flush'] ) ) {
 				if ( $ets_profilepress_discord_default_role_id ) {
 					update_option( 'ets_profilepress_discord_default_role_id', $ets_profilepress_discord_default_role_id );
+				}
+				if ( $allow_none_customer ) {
+					update_option( 'ets_profilepress_discord_allow_none_customer', $allow_none_customer );
 				}
 
 				$message = esc_html__( 'Your mappings are saved successfully.', 'connect-profilepress-and-discord' );

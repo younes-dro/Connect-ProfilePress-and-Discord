@@ -120,3 +120,24 @@ function ets_profilepress_discord_update_bot_name_option() {
 	}
 
 }
+
+/**
+ * Get Active Plans.
+ *
+ * @return ARRAY List of active plans.
+ */
+function ets_profilepress_discord_get_active_plans() {
+	global $wpdb;
+	$plans_table = $wpdb->prefix . 'ppress_plans';
+	$sql         = "SELECT * FROM {$plans_table}";
+	$sql        .= ' WHERE status=%s';
+	$sql        .= ' ORDER BY id DESC';
+
+	$result = $wpdb->get_results( $wpdb->prepare( $sql, 'true' ), 'ARRAY_A' );
+
+	if ( is_array( $result ) && ! empty( $result ) ) {
+		return $result;
+	}
+
+	return array();
+}

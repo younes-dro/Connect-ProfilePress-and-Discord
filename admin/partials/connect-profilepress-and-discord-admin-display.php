@@ -63,7 +63,7 @@ if ( isset( $_GET['save_settings_msg'] ) ) {
 				</div>
 				<?php if ( ets_profilepress_discord_check_saved_settings_status() ) : ?>  
 				<div id='ets_profilepress_role_level' class="skltbs-panel">
-					<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-role-level-map.php'; ?>
+					<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-role-mapping.php'; ?>
 				</div>
 				<?php endif; ?>
 				<div id='ets_profilepress_discord_advanced' class="skltbs-panel">

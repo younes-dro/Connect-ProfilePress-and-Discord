@@ -145,4 +145,71 @@ class Connect_Profilepress_And_Discord_Admin {
 		require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/connect-profilepress-and-discord-admin-display.php';
 	}
 
+	/**
+	 * Save application details
+	 *
+	 * @since    1.0.0
+	 * @return NONE
+	 */
+	public function ets_profilepress_discord_application_settings() {
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		$ets_profilepress_discord_client_id = isset( $_POST['ets_profilepress_discord_client_id'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_client_id'] ) ) : '';
+
+		$ets_profilepress_discord_client_secret = isset( $_POST['ets_profilepress_discord_client_secret'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_client_secret'] ) ) : '';
+
+		$ets_profilepress_discord_bot_token = isset( $_POST['ets_profilepress_discord_bot_token'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_bot_token'] ) ) : '';
+
+		$ets_profilepress_discord_redirect_url = isset( $_POST['ets_profilepress_discord_redirect_url'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_redirect_url'] ) ) : '';
+
+		$ets_profilepress_discord_redirect_page_id = isset( $_POST['ets_profilepress_discord_redirect_page_id'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_redirect_page_id'] ) ) : '';
+
+		$ets_profilepress_discord_admin_redirect_url = isset( $_POST['ets_profilepress_discord_admin_redirect_url'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_admin_redirect_url'] ) ) : '';
+
+		$ets_profilepress_discord_server_id = isset( $_POST['ets_profilepress_discord_server_id'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_server_id'] ) ) : '';
+
+		$ets_current_url = sanitize_text_field( trim( $_POST['current_url'] ) );
+
+		if ( isset( $_POST['submit'] ) ) {
+			if ( isset( $_POST['ets_profilepress_discord_save_settings'] ) && wp_verify_nonce( $_POST['ets_profilepress_discord_save_settings'], 'save_profilepress_discord_general_settings' ) ) {
+				if ( $ets_profilepress_discord_client_id ) {
+					update_option( 'ets_profilepress_discord_client_id', $ets_profilepress_discord_client_id );
+				}
+
+				if ( $ets_profilepress_discord_client_secret ) {
+					update_option( 'ets_profilepress_discord_client_secret', $ets_profilepress_discord_client_secret );
+				}
+
+				if ( $ets_profilepress_discord_bot_token ) {
+					update_option( 'ets_profilepress_discord_bot_token', $ets_profilepress_discord_bot_token );
+				}
+
+				if ( $ets_profilepress_discord_redirect_url ) {
+					update_option( 'ets_profilepress_discord_redirect_page_id', $ets_profilepress_discord_redirect_url );
+					$ets_profilepress_discord_redirect_url = ets_get_profilepress_discord_formated_discord_redirect_url( $ets_profilepress_discord_redirect_url );
+					update_option( 'ets_profilepress_discord_redirect_url', $ets_profilepress_discord_redirect_url );
+
+				}
+
+				if ( $ets_profilepress_discord_server_id ) {
+					update_option( 'ets_profilepress_discord_server_id', $ets_profilepress_discord_server_id );
+				}
+				if ( $ets_profilepress_discord_admin_redirect_url ) {
+					update_option( 'ets_profilepress_discord_admin_redirect_url', $ets_profilepress_discord_admin_redirect_url );
+				}
+				/**
+				* Call function to save bot name option
+				 */
+				ets_profilepress_discord_update_bot_name_option();
+
+				$message = esc_html__( 'Your settings are saved successfully.', 'connect-profilepress-and-discord' );
+
+				$pre_location = $ets_current_url . '&save_settings_msg=' . $message . '#ets_profilepress_application_details';
+				wp_safe_redirect( $pre_location );
+			}
+		}
+	}
+
 }

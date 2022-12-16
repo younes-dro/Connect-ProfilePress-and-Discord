@@ -245,4 +245,115 @@ class Connect_Profilepress_And_Discord_Admin {
 
 	}
 
+	/**
+	 * Load discord roles from server
+	 *
+	 * @return OBJECT REST API response
+	 */
+	public function ets_profilepress_discord_load_discord_roles() {
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		// Check for nonce security
+		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		$user_id = get_current_user_id();
+
+		$guild_id          = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_server_id' ) ) );
+		$discord_bot_token = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_bot_token' ) ) );
+		$client_id         = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_client_id' ) ) );
+		if ( $guild_id && $discord_bot_token ) {
+			$discod_server_roles_api = ETS_PROFILEPRESS_DISCORD_API_URL . 'guilds/' . $guild_id . '/roles';
+			$guild_args              = array(
+				'method'  => 'GET',
+				'headers' => array(
+					'Content-Type'  => 'application/json',
+					'Authorization' => 'Bot ' . $discord_bot_token,
+				),
+			);
+			$guild_response          = wp_remote_post( $discod_server_roles_api, $guild_args );
+
+			// ets_profilepress_discord_log_api_response( $user_id, $discod_server_roles_api, $guild_args, $guild_response );
+
+			$response_arr = json_decode( wp_remote_retrieve_body( $guild_response ), true );
+
+			if ( is_array( $response_arr ) && ! empty( $response_arr ) ) {
+				if ( array_key_exists( 'code', $response_arr ) || array_key_exists( 'error', $response_arr ) ) {
+					// Connect_ProfilePress_Discord_Add_On_Logs::write_api_response_logs( $response_arr, $user_id, debug_backtrace()[0] );
+				} else {
+					$response_arr['previous_mapping'] = get_option( 'ets_profilepress_discord_role_mapping' );
+
+					$discord_roles = array();
+					foreach ( $response_arr as $key => $value ) {
+						$isbot = false;
+						if ( is_array( $value ) ) {
+							if ( array_key_exists( 'tags', $value ) ) {
+								if ( array_key_exists( 'bot_id', $value['tags'] ) ) {
+									$isbot = true;
+									if ( $value['tags']['bot_id'] === $client_id ) {
+										$response_arr['bot_connected'] = 'yes';
+									}
+								}
+							}
+						}
+						if ( $key != 'previous_mapping' && $isbot == false && isset( $value['name'] ) && $value['name'] != '@everyone' ) {
+							$discord_roles[ $value['id'] ]       = $value['name'];
+							$discord_roles_color[ $value['id'] ] = $value['color'];
+						}
+					}
+					update_option( 'ets_profilepress_discord_all_roles', serialize( $discord_roles ) );
+					update_option( 'ets_profilepress_discord_roles_color', serialize( $discord_roles_color ) );
+				}
+			}
+				return wp_send_json( $response_arr );
+		}
+
+				exit();
+
+	}
+
+	/**
+	 * Save Role mapping settings
+	 *
+	 * @param NONE
+	 * @return NONE
+	 */
+	public function ets_profilepress_discord_save_role_mapping() {
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		$ets_discord_roles = isset( $_POST['ets_profilepress_discord_role_mapping'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_role_mapping'] ) ) : '';
+
+		$ets_profilepress_discord_default_role_id = isset( $_POST['profilepress_defaultRole'] ) ? sanitize_textarea_field( trim( $_POST['profilepress_defaultRole'] ) ) : '';
+		$ets_discord_roles                        = stripslashes( $ets_discord_roles );
+		$save_mapping_status                      = update_option( 'ets_profilepress_discord_role_mapping', $ets_discord_roles );
+		$ets_current_url                          = sanitize_text_field( trim( $_POST['current_url'] ) );
+		$allow_none_customer                      = isset( $_POST['allow_none_customer'] ) ? sanitize_textarea_field( trim( $_POST['allow_none_customer'] ) ) : '';
+		if ( isset( $_POST['ets_profilepress_discord_role_mappings_nonce'] ) && wp_verify_nonce( $_POST['ets_profilepress_discord_role_mappings_nonce'], 'profilepress_discord_role_mappings_nonce' ) ) {
+			if ( ( $save_mapping_status || isset( $_POST['ets_profilepress_discord_role_mapping'] ) ) && ! isset( $_POST['flush'] ) ) {
+				if ( $ets_profilepress_discord_default_role_id ) {
+					update_option( 'ets_profilepress_discord_default_role_id', $ets_profilepress_discord_default_role_id );
+				}
+				if ( $allow_none_customer ) {
+					update_option( 'ets_profilepress_discord_allow_none_customer', $allow_none_customer );
+				}
+
+				$message = esc_html__( 'Your mappings are saved successfully.', 'connect-profilepress-and-discord' );
+			}
+			if ( isset( $_POST['flush'] ) ) {
+				delete_option( 'ets_profilepress_discord_role_mapping' );
+				delete_option( 'ets_profilepress_discord_default_role_id' );
+
+				$message = esc_html__( 'Your settings flushed successfully.', 'connect-profilepress-and-discord' );
+			}
+			$pre_location = $ets_current_url . '&save_settings_msg=' . $message . '#ets_profilepress_role_level';
+			wp_safe_redirect( $pre_location );
+		}
+	}
+
 }

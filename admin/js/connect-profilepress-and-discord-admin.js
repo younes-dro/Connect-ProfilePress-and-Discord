@@ -1,37 +1,45 @@
 (function( $ ) {
 	'use strict';
+	if (etsProfilePressParams.is_admin) {
+		$(document).ready(function(){
+		if(jQuery().select2) {
+			console.log(etsProfilePressParams);
+			return;
+			$('#ets_profilepress_discord_redirect_url').select2({ width: 'resolve' });
+                $('#ets_profilepress_discord_redirect_url').on('change', function(){
+				$.ajax({
+					url: etsProfilePressParams.admin_ajax,
+					type: "POST",
+					context: this,
+					data: { 'action': 'ets_profilepress_discord_update_redirect_url', 'ets_profilepress_page_id': $(this).val() , 'ets_profilepress_discord_nonce': etsProfilePressParams.ets_profilepress_discord_nonce },
+					beforeSend: function () {
+						$('p.redirect-url').find('b').html("");
+                        $('p.ets-discord-update-message').css('display','none');                                               
+						$(this).siblings('p.description').find('span.spinner').addClass("ets-is-active").show();
+					},
+					success: function (data) {
+						
+						$('p.redirect-url').find('b').html(data.formated_discord_redirect_url);
+						$('p.ets-discord-update-message').css('display','block');                                               
+					},
+					error: function (response, textStatus, errorThrown ) {
+						console.log( textStatus + " :  " + response.status + " : " + errorThrown );
+					},
+					complete: function () {
+						$(this).siblings('p.description').find('span.spinner').removeClass("ets-is-active").hide();
+					}
+				});
 
-	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
+			});                        
+		}
+	}); // Document Ready
+
+}// Is Admin
 
 			/*Tab options*/
 			if ($.skeletabs ) {
 				$.skeletabs.setDefaults({
 					keyboard: false,
 				});
+			}
 })( jQuery );

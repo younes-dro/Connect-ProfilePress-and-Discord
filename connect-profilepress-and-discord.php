@@ -31,6 +31,47 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
+ * Discord API URL
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_API_URL', 'https://discord.com/api/v10/' );
+
+/**
+ * Discord BOT Permissions
+ */
+
+define( 'ETS_PROFILEPRESS_DISCORD_BOT_PERMISSIONS', 8 );
+
+
+/**
+ * Discord API call scopes
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_OAUTH_SCOPES', 'identify email guilds guilds.join' );
+
+/**
+ * Follwing response codes not cosider for re-try API calls.
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_DONOT_RETRY_THESE_API_CODES', array( 0, 10003, 50033, 10004, 50025, 10013, 10011 ) );
+
+/**
+ * Define plugin directory url
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_DONOT_RETRY_HTTP_CODES', array( 400, 401, 403, 404, 405, 502 ) );
+/**
+ * ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
+
+/**
+ * Define group name for action scheduler actions
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME', 'ets-profilepress-discord' );
+
+/**
+ * Define plugin directory URL
+ */
+define( 'ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
+
+/**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.

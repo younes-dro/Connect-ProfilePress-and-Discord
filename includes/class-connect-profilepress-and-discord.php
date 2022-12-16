@@ -100,6 +100,11 @@ class Connect_Profilepress_And_Discord {
 	private function load_dependencies() {
 
 		/**
+		 * Common functions.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/functions.php';
+
+		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
@@ -156,6 +161,9 @@ class Connect_Profilepress_And_Discord {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'ets_ppress_discord_add_settings_menu', 99 );
+		$this->loader->add_action( 'admin_post_profilepress_discord_application_settings', $plugin_admin, 'ets_profilepress_discord_application_settings' );
+		$this->loader->add_action( 'wp_ajax_ets_profilepress_discord_update_redirect_url', $plugin_admin, 'ets_profilepress_discord_update_redirect_url' );
 
 	}
 
@@ -175,6 +183,19 @@ class Connect_Profilepress_And_Discord {
 
 	}
 
+	/**
+	 * Discord Logo
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @return STRING
+	 */
+	public static function get_discord_logo_white() {
+		$img  = file_get_contents( plugin_dir_path( dirname( __FILE__ ) ) . 'public/images/discord-logo-white.svg' );
+		$data = base64_encode( $img );
+
+		return '<img class="ets-discord-logo-white" src="data:image/svg+xml;base64,' . $data . '" />';
+	}
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *

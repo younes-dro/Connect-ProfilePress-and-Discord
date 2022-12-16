@@ -23,15 +23,13 @@
 class Connect_Profilepress_And_Discord_Activator {
 
 	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
+	 * Save default values on activation the plugin.
 	 *
 	 * @since    1.0.0
 	 */
 	public static function activate() {
 		update_option( 'ets_profilepress_discord_send_welcome_dm', true );
-		update_option( 'ets_profilepress_discord_welcome_message', 'Hi [PPRESS_USER_NAME] ([PPRESS_USER_EMAIL]), Welcome, Your plans [PPRESS_RANKS] at [SITE_URL] Thanks, Kind Regards, [BLOG_NAME]' );
+		update_option( 'ets_profilepress_discord_welcome_message', 'Hi [PPRESS_USER_NAME] ([PPRESS_USER_EMAIL]), Welcome, Your plans [PPRESS_PLANS] at [SITE_URL] Thanks, Kind Regards, [BLOG_NAME]' );
 		update_option( 'ets_profilepress_discord_retry_failed_api', true );
 		update_option( 'ets_profilepress_discord_connect_button_bg_color', '#7bbc36' );
 		update_option( 'ets_profilepress_discord_disconnect_button_bg_color', '#ff0000' );

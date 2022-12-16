@@ -166,6 +166,7 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'wp_ajax_ets_profilepress_discord_update_redirect_url', $plugin_admin, 'ets_profilepress_discord_update_redirect_url' );
 		$this->loader->add_action( 'wp_ajax_ets_profilepress_discord_load_discord_roles', $plugin_admin, 'ets_profilepress_discord_load_discord_roles' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_role_mapping', $plugin_admin, 'ets_profilepress_discord_save_role_mapping' );
+		$this->loader->add_action( 'admin_post_profilepress_discord_save_advance_settings', $plugin_admin, 'ets_profilepress_discord_save_advance_settings' );
 
 	}
 

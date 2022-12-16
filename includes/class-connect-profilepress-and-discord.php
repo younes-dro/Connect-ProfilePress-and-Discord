@@ -101,7 +101,6 @@ class Connect_Profilepress_And_Discord {
 
 		/**
 		 * Common functions.
-		 *
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/functions.php';
 
@@ -182,6 +181,19 @@ class Connect_Profilepress_And_Discord {
 
 	}
 
+	/**
+	 * Discord Logo
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @return STRING
+	 */
+	public static function get_discord_logo_white() {
+		$img  = file_get_contents( plugin_dir_path( dirname( __FILE__ ) ) . 'public/images/discord-logo-white.svg' );
+		$data = base64_encode( $img );
+
+		return '<img class="ets-discord-logo-white" src="data:image/svg+xml;base64,' . $data . '" />';
+	}
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *

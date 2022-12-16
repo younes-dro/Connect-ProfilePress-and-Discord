@@ -7,6 +7,7 @@ $ets_profilepress_discord_roles              = sanitize_text_field( trim( get_op
 $ets_profilepress_discord_server_id          = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_server_id' ) ) );
 $ets_profilepress_discord_connected_bot_name = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_connected_bot_name' ) ) );
 $ets_profilepress_discord_redirect_page_id   = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_redirect_page_id' ) ) );
+
 ?>
 <form method="post" action="<?php echo esc_url( get_site_url() ) . '/wp-admin/admin-post.php'; ?>">
   <input type="hidden" name="action" value="profilepress_discord_application_settings">

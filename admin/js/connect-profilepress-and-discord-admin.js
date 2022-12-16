@@ -254,7 +254,10 @@
 			}
 			makeDrag($('.makeMeDraggable'));
 			newClone.css({ 'width': '100%', 'left': '0', 'top': '0', 'margin-bottom': '0px', 'position':'unset', 'order': '1' });
-		} 			
+		} 	
+		
+		$('#ets_profilepress_discord_connect_button_bg_color').wpColorPicker();
+		$('#ets_profilepress_discord_disconnect_button_bg_color').wpColorPicker();
 
 	}); // Document Ready
 

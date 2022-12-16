@@ -212,4 +212,37 @@ class Connect_Profilepress_And_Discord_Admin {
 		}
 	}
 
+	/**
+	 * Update redirect url
+	 *
+	 * @param NONE
+	 * @return NONE
+	 */
+	public function ets_profilepress_discord_update_redirect_url() {
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		// Check for nonce security
+		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+
+		$page_id = sanitize_text_field( $_POST['ets_profilepress_page_id'] );
+		if ( isset( $page_id ) ) {
+			$formated_discord_redirect_url = ets_get_profilepress_discord_formated_discord_redirect_url( $page_id );
+			update_option( 'ets_profilepress_discord_redirect_page_id', $page_id );
+			update_option( 'ets_profilepress_discord_redirect_url', $formated_discord_redirect_url );
+			$res = array(
+				'formated_discord_redirect_url' => $formated_discord_redirect_url,
+			);
+			wp_send_json( $res );
+
+		}
+		exit();
+
+	}
+
 }

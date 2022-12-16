@@ -58,27 +58,27 @@ if ( isset( $_GET['save_settings_msg'] ) ) {
 		</ul>
 <!--Creating Tabs-->
 			<div class="skltbs-panel-group">
-				<div id='profilepress_general_settings' class="skltbs-panel">
+				<div id='ets_profilepress_general_settings' class="skltbs-panel">
 					<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-application-details.php'; ?>
 				</div>
 				<?php if ( ets_profilepress_discord_check_saved_settings_status() ) : ?>  
-				<div id='profilepress_role_level' class="skltbs-panel">
+				<div id='ets_profilepress_role_level' class="skltbs-panel">
 					<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-role-level-map.php'; ?>
 				</div>
 				<?php endif; ?>
-				<div id='profilepress_discord_advanced' class="skltbs-panel">
+				<div id='ets_profilepress_discord_advanced' class="skltbs-panel">
 				<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-advanced.php'; ?>
 				</div>
-				<div id='profilepress_discord_appearance' class="skltbs-panel">
+				<div id='ets_profilepress_discord_appearance' class="skltbs-panel">
 				<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-appearance.php'; ?>
 				</div> 
-				<div id='profilepress_discord_logs' class="skltbs-panel">
+				<div id='ets_profilepress_discord_logs' class="skltbs-panel">
 				<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-error-log.php'; ?>
 				</div>
-				<div id='profilepress_discord_documentation' class="skltbs-panel">
+				<div id='ets_profilepress_discord_documentation' class="skltbs-panel">
 				<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-documentation.php'; ?>
 				</div>				
-				<div id='profilepress_discord_support' class="skltbs-panel">
+				<div id='ets_profilepress_discord_support' class="skltbs-panel">
 				<?php require_once ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_PATH . 'admin/partials/pages/connect-profilepress-discord-support.php'; ?>
 				</div>								                
 			</div>

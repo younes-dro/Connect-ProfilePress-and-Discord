@@ -141,3 +141,23 @@ function ets_profilepress_discord_get_active_plans() {
 
 	return array();
 }
+
+/**
+ * Log API call response.
+ *
+ * @param INT          $user_id
+ * @param STRING       $api_url
+ * @param ARRAY        $api_args
+ * @param ARRAY|OBJECT $api_response
+ */
+function ets_profilepress_discord_log_api_response( $user_id, $api_url = '', $api_args = array(), $api_response = '' ) {
+	$log_api_response = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_log_api_response' ) ) );
+	if ( $log_api_response == true ) {
+		$log_string  = '==>' . $api_url;
+		$log_string .= '-::-' . serialize( $api_args );
+		$log_string .= '-::-' . serialize( $api_response );
+
+		$logs = new Connect_Profilepress_And_Discord_Logs();
+		$logs->write_api_response_logs( $log_string, $user_id );
+	}
+}

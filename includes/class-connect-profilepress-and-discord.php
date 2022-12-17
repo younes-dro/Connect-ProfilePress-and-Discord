@@ -100,6 +100,12 @@ class Connect_Profilepress_And_Discord {
 	private function load_dependencies() {
 
 		/**
+		 * The class responsible for Logs
+		 * core plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-connect-profilepress-and-discord-logs.php';
+
+		/**
 		 * Common functions.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/functions.php';

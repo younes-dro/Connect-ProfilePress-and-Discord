@@ -254,7 +254,36 @@
 			}
 			makeDrag($('.makeMeDraggable'));
 			newClone.css({ 'width': '100%', 'left': '0', 'top': '0', 'margin-bottom': '0px', 'position':'unset', 'order': '1' });
-		} 	
+		} 
+		
+		/*Clear log log call-back*/
+		$('#ets-profilepress-clrbtn').click(function (e) {
+			e.preventDefault();
+			$.ajax({
+				url: etsProfilePressParams.admin_ajax,
+				type: "POST",
+				data: { 'action': 'ets_profilepress_discord_clear_logs', 'ets_profilepress_discord_nonce': etsProfilePressParams.ets_profilepress_discord_nonce },
+				beforeSend: function () {
+					$(".clr-log.spinner").addClass("is-active").show();
+				},
+				success: function (data) {
+         
+					if (data.error) {
+						// handle the error
+						alert(data.error.msg);
+					} else {
+                                            
+						$('.error-log').html("Clear logs Sucesssfully !");
+					}
+				},
+				error: function (response, textStatus, errorThrown ) {
+					console.log( textStatus + " :  " + response.status + " : " + errorThrown );
+				},
+				complete: function () {
+					$(".clr-log.spinner").removeClass("is-active").hide();
+				}
+			});
+		});		
 		
 		$('#ets_profilepress_discord_connect_button_bg_color').wpColorPicker();
 		$('#ets_profilepress_discord_disconnect_button_bg_color').wpColorPicker();

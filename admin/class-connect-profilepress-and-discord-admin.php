@@ -528,8 +528,7 @@ class Connect_Profilepress_And_Discord_Admin {
 				if ( $mail ) {
 					$message = esc_html__( 'Your request have been successfully submitted!', 'connect-profilepress-and-discord' );
 				} else {
-					$message  = esc_html__( 'failure to send email!', 'connect-profilepress-and-discord' );
-					$message .= '&failed_to_send_mail=yes';
+					$message = esc_html__( 'failure to send email!', 'connect-profilepress-and-discord' );
 				}
 				if ( isset( $_POST['current_url'] ) ) {
 					$pre_location = sanitize_text_field( $_POST['current_url'] ) . '&save_settings_msg=' . $message . '#ets_profilepress_discord_support';

@@ -17,12 +17,8 @@
 
 if ( isset( $_GET['save_settings_msg'] ) ) {
 
-	$notice_class = 'notice-success';
-	if ( isset( $_GET['failed_to_send_mail'] ) && $_GET['failed_to_send_mail'] === 'yes' ) {
-		$notice_class = 'notice-error ';
-	}
 	?>
-	<div class="notice <?php echo esc_attr( $notice_class ); ?> is-dismissible support-success-msg">
+	<div class="notice notice-success is-dismissible support-success-msg">
 		<p><?php echo esc_html( $_GET['save_settings_msg'] ); ?></p>
 	</div>
 	<?php

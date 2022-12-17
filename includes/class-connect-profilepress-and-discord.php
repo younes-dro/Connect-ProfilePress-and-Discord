@@ -174,6 +174,7 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_role_mapping', $plugin_admin, 'ets_profilepress_discord_save_role_mapping' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_advance_settings', $plugin_admin, 'ets_profilepress_discord_save_advance_settings' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_appearance_settings', $plugin_admin, 'ets_profilepress_discord_save_appearance_settings' );
+		$this->loader->add_action( 'admin_post_profilepress_discord_send_support_mail', $plugin_admin, 'ets_profilepress_discord_send_support_mail' );
 
 	}
 

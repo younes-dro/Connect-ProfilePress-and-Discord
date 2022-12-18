@@ -161,3 +161,26 @@ function ets_profilepress_discord_log_api_response( $user_id, $api_url = '', $ap
 		$logs->write_api_response_logs( $log_string, $user_id );
 	}
 }
+
+/**
+ * Get User's active subscriptions
+ *
+ * @param INT $user_id The user's id.
+ *
+ * @return ARRAY|NULL Array of IDs planc Or Null.
+ */
+function ets_profilepress_get_active_subscriptions( $user_id ) {
+	global $wpdb;
+	$active_subscriptions_sql = "
+	SELECT s.plan_id FROM `{$wpdb->prefix}ppress_subscriptions` s 
+	INNER JOIN {$wpdb->prefix}ppress_customers c on c.id = s.customer_id 
+	where s.status = 'active' 
+	and c.user_id =%d;";
+	$plan_ids                 = $wpdb->get_results( $wpdb->prepare( $active_subscriptions_sql, $user_id ) );
+	if ( is_array( $plan_ids ) && count( $plan_ids ) > 0 ) {
+		return $plan_ids;
+	} else {
+		return null;
+	}
+
+}

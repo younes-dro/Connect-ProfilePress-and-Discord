@@ -161,3 +161,122 @@ function ets_profilepress_discord_log_api_response( $user_id, $api_url = '', $ap
 		$logs->write_api_response_logs( $log_string, $user_id );
 	}
 }
+
+/**
+ * Get User's active subscriptions
+ *
+ * @param INT $user_id The user's id.
+ *
+ * @return ARRAY|NULL Array of IDs planc Or Null.
+ */
+function ets_profilepress_get_active_subscriptions( $user_id ) {
+	global $wpdb;
+	$active_subscriptions_sql = "
+	SELECT s.plan_id FROM `{$wpdb->prefix}ppress_subscriptions` s 
+	INNER JOIN {$wpdb->prefix}ppress_customers c on c.id = s.customer_id 
+	where s.status = 'active' 
+	and c.user_id =%d;";
+	$plan_ids                 = $wpdb->get_results( $wpdb->prepare( $active_subscriptions_sql, $user_id ) );
+	if ( is_array( $plan_ids ) && count( $plan_ids ) > 0 ) {
+		return $plan_ids;
+	} else {
+		return null;
+	}
+
+}
+/**
+ * Return the discord user avatar.
+ *
+ * @param INT    $discord_user_id The discord usr ID.
+ * @param STRING $user_avatar Discord avatar hash value.
+ * @param STRING $restrictcontent_discord The html.
+ *
+ * @return STRING
+ */
+function ets_profilepress_discord_get_user_avatar( $discord_user_id, $user_avatar, $restrictcontent_discord ) {
+	if ( $user_avatar ) {
+		$avatar_url               = '<img class="ets-profilepress-user-avatar" src="https://cdn.discordapp.com/avatars/' . $discord_user_id . '/' . $user_avatar . '.png" />';
+		$restrictcontent_discord .= $avatar_url;
+	}
+	return $restrictcontent_discord;
+}
+
+/**
+ * Get roles assigned messages.
+ *
+ * @param STRING $mapped_role_name
+ * @param STRING $default_role_name
+ * @param STRING $restrictcontent_discord
+ *
+ * @return STRING html.
+ */
+function ets_profilepress_discord_roles_assigned_message( $mapped_role_name, $default_role_name, $restrictcontent_discord ) {
+
+	if ( $mapped_role_name ) {
+		$restrictcontent_discord .= '<p class="ets_assigned_role">';
+
+		$restrictcontent_discord .= esc_html__( 'Following Roles will be assigned to you in Discord: ', 'connect-profilepress-and-discord' );
+		$restrictcontent_discord .= $mapped_role_name;
+		if ( $default_role_name ) {
+			$restrictcontent_discord .= $default_role_name;
+
+		}
+
+		$restrictcontent_discord .= '</p>';
+	} elseif ( $default_role_name ) {
+		$restrictcontent_discord .= '<p class="ets_assigned_role">';
+
+		$restrictcontent_discord .= esc_html__( 'Following Role will be assigned to you in Discord: ', 'connect-profilepress-and-discord' );
+		$restrictcontent_discord .= $default_role_name;
+
+		$restrictcontent_discord .= '</p>';
+
+	}
+	return $restrictcontent_discord;
+}
+
+/**
+ * Get allowed html using WordPress API function wp_kses.
+ *
+ * @return ARRAY Allowed html.
+ */
+function ets_profilepress_discord_allowed_html() {
+	$allowed_html = array(
+		'div'    => array(
+			'class' => array(),
+		),
+		'p'      => array(
+			'class' => array(),
+		),
+		'a'      => array(
+			'id'           => array(),
+			'data-user-id' => array(),
+			'href'         => array(),
+			'class'        => array(),
+			'style'        => array(),
+		),
+		'label'  => array(
+			'class' => array(),
+		),
+		'h3'     => array(),
+		'span'   => array(
+			'class' => array(),
+		),
+		'i'      => array(
+			'style' => array(),
+			'class' => array(),
+		),
+		'button' => array(
+			'class'        => array(),
+			'data-user-id' => array(),
+			'id'           => array(),
+		),
+		'img'    => array(
+			'src'   => array(),
+			'class' => array(),
+		),
+		'h2'     => array(),
+	);
+
+	return $allowed_html;
+}

@@ -94,14 +94,14 @@
 							preclone.slice(1).hide();
 						}
 						
-						if (jQuery('*[data-profilepress_panl_id="' + arrayofkey[1] + '"]').find('*[data-profilepress_role_id="' + val + '"]').length == 0) {
-							$('*[data-profilepress_panl_id="' + arrayofkey[1] + '"]').append(preclone).attr('data-drop-profilepress_role_id', val).find('span').css({ 'order': '2' });
+						if (jQuery('*[data-profilepress_plan_id="' + arrayofkey[1] + '"]').find('*[data-profilepress_role_id="' + val + '"]').length == 0) {
+							$('*[data-profilepress_plan_id="' + arrayofkey[1] + '"]').append(preclone).attr('data-drop-profilepress_role_id', val).find('span').css({ 'order': '2' });
 						}
-						if ($('*[data-profilepress_panl_id="' + arrayofkey[1] + '"]').find('.makeMeDraggable').length >= 1) {
-							$('*[data-profilepress_panl_id="' + arrayofkey[1] + '"]').droppable("destroy");
+						if ($('*[data-profilepress_plan_id="' + arrayofkey[1] + '"]').find('.makeMeDraggable').length >= 1) {
+							$('*[data-profilepress_plan_id="' + arrayofkey[1] + '"]').droppable("destroy");
 						}
 
-						preclone.css({ 'width': '100%', 'left': '0', 'top': '0', 'margin-bottom': '0px', 'order': '1' }).attr('data-profilepress_panl_id', arrayofkey[1]);
+						preclone.css({ 'width': '100%', 'left': '0', 'top': '0', 'margin-bottom': '0px', 'order': '1' }).attr('data-profilepress_plan_id', arrayofkey[1]);
 						makeDrag(preclone);
 					});
 				}
@@ -157,7 +157,7 @@
 		/*Handel droppable event for saved mapping*/
 		function handlePreviousDropEvent(event, ui) {
 			var draggable = ui.draggable;
-			if(draggable.data('profilepress_panl_id')){
+			if(draggable.data('profilepress_plan_id')){
 				$(ui.draggable).remove().hide();
 			}
 			$(this).append(draggable);
@@ -171,7 +171,7 @@
 			$.each(oldItems, function (key, val) {
 				if (val) {
 					var arrayofval = val.split(',');
-					if (arrayofval[0] == 'profilepress_panl_id_' + draggable.data('profilepress_panl_id') && arrayofval[1] == draggable.data('profilepress_role_id')) {
+					if (arrayofval[0] == 'profilepress_plan_id_' + draggable.data('profilepress_plan_id') && arrayofval[1] == draggable.data('profilepress_role_id')) {
 						delete oldItems[key];
 					}
 				}
@@ -180,7 +180,7 @@
 			$.each(oldItems, function (key, val) {
 				if (val) {
 					var arrayofval = val.split(',');
-					if (arrayofval[0] != 'profilepress_panl_id_' + draggable.data('profilepress_panl_id') || arrayofval[1] != draggable.data('profilepress_role_id')) {
+					if (arrayofval[0] != 'profilepress_plan_id_' + draggable.data('profilepress_plan_id') || arrayofval[1] != draggable.data('profilepress_role_id')) {
 						jsonStart = jsonStart + '"' + arrayofval[0] + '":' + '"' + arrayofval[1] + '",';
 					}
 				}
@@ -213,24 +213,24 @@
 			if ($(this).data('drop-profilepress_role_id') != newClone.data('profilepress_role_id')) {
 				var oldItems = JSON.parse(localStorage.getItem('profilepress_mapArray')) || [];
 				$(this).attr('data-drop-profilepress_role_id', newClone.data('profilepress_role_id'));
-				newClone.attr('data-profilepress_panl_id', $(this).data('profilepress_panl_id'));
+				newClone.attr('data-profilepress_plan_id', $(this).data('profilepress_plan_id'));
 
 				$.each(oldItems, function (key, val) {
 					if (val) {
 						var arrayofval = val.split(',');
-						if (arrayofval[0] == 'profilepress_panl_id_' + $(this).data('profilepress_panl_id')) {
+						if (arrayofval[0] == 'profilepress_plan_id_' + $(this).data('profilepress_plan_id')) {
 							delete oldItems[key];
 						}
 					}
 				});
 
-				var newkey = 'profilepress_panl_id_' + $(this).data('profilepress_panl_id');
+				var newkey = 'profilepress_plan_id_' + $(this).data('profilepress_plan_id');
 				oldItems.push(newkey + ',' + newClone.data('profilepress_role_id'));
 				var jsonStart = "{";
 				$.each(oldItems, function (key, val) {
 					if (val) {
 						var arrayofval = val.split(',');
-						if (arrayofval[0] == 'profilepress_panl_id_' + $(this).data('profilepress_panl_id') || arrayofval[1] != newClone.data('profilepress_role_id') && arrayofval[0] != 'profilepress_panl_id_' + $(this).data('profilepress_panl_id') || arrayofval[1] == newClone.data('profilepress_role_id')) {
+						if (arrayofval[0] == 'profilepress_plan_id_' + $(this).data('profilepress_plan_id') || arrayofval[1] != newClone.data('profilepress_role_id') && arrayofval[0] != 'profilepress_plan_id_' + $(this).data('profilepress_plan_id') || arrayofval[1] == newClone.data('profilepress_role_id')) {
 							jsonStart = jsonStart + '"' + arrayofval[0] + '":' + '"' + arrayofval[1] + '",';
 						}
 					}

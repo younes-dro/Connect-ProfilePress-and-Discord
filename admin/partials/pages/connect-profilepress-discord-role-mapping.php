@@ -29,7 +29,7 @@ $allow_none_customer               = sanitize_text_field( trim( get_option( 'ets
 		foreach ( $ets_active_plans as  $active_plan ) {
 
 			?>
-		  <div class="makeMeDroppable" data-profilepress_panl_id="<?php echo esc_attr( $active_plan['id'] ); ?>" ><span><?php echo esc_html( $active_plan['name'] ); ?></span></div>
+		  <div class="makeMeDroppable" data-profilepress_plan_id="<?php echo esc_attr( $active_plan['id'] ); ?>" ><span><?php echo esc_html( $active_plan['name'] ); ?></span></div>
 			<?php
 
 		}

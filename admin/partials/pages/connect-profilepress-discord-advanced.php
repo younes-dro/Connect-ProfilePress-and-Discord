@@ -21,9 +21,9 @@ $log_api_res          = sanitize_text_field( trim( get_option( 'ets_profilepress
 	<tr>
 		<th scope="row"><?php esc_html_e( 'Shortcode:', 'connect-profilepress-and-discord' ); ?></th>
 		<td> <fieldset>
-		[profilepress_discord]
+		[ets_ppress_discord]
 		<br/>
-		<small><?php esc_html_e( 'Use this shortcode [profilepress_discord] to display connect to discord button on any page.', 'connect-profilepress-and-discord' ); ?></small>
+		<small><?php esc_html_e( 'Use this shortcode [ets_ppress_discord] to display connect to discord button on any page.', 'connect-profilepress-and-discord' ); ?></small>
 		</fieldset></td>
 	</tr>         
 	<tr>

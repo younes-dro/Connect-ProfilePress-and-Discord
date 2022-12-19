@@ -173,7 +173,7 @@ class Connect_Profilepress_And_Discord_Public {
 				$restrictcontent_discord .= '<div>';
 				$restrictcontent_discord .= '<h3>' . esc_html__( 'Discord connection', 'connect-profilepress-and-discord' ) . '</h3>';
 				$restrictcontent_discord .= '<div>';
-				$restrictcontent_discord .= '<a href="?action=profilepress-discord-login" class="profilepress-discord-btn-connect ets-btn" ' . $connect_btn_bg_color . ' >' . esc_html( $ets_profilepress_discord_loggedin_button_text ) . Connect_Profilepress_And_Discord::get_discord_logo_white() . '</a>';
+				$restrictcontent_discord .= '<a href="?action=ets-profilepress-discord-login" class="profilepress-discord-btn-connect ets-btn" ' . $connect_btn_bg_color . ' >' . esc_html( $ets_profilepress_discord_loggedin_button_text ) . Connect_Profilepress_And_Discord::get_discord_logo_white() . '</a>';
 				$restrictcontent_discord .= '</div>';
 				$restrictcontent_discord  = ets_profilepress_discord_roles_assigned_message( $mapped_role_name, $default_role_name, $restrictcontent_discord );
 

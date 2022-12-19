@@ -203,6 +203,57 @@ class Connect_Profilepress_And_Discord {
 	}
 
 	/**
+	 * Re-schedule  failed action
+	 *
+	 * @param INT            $action_id
+	 * @param OBJECT         $e
+	 * @param OBJECT context
+	 * @return NONE
+	 */
+	public function ets_profilepress_discord_reschedule_failed_action( $action_id ) {
+		// First check if the action is for profilepress discord.
+		$action_data = ets_profilepress_discord_as_get_action_data( $action_id );
+		if ( $action_data !== false ) {
+			$hook              = $action_data['hook'];
+			$args              = json_decode( $action_data['args'] );
+			$retry_failed_api  = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_retry_failed_api' ) ) );
+			$hook_failed_count = ets_profilepress_discord_count_of_hooks_failures( $hook );
+			$retry_api_count   = absint( sanitize_text_field( trim( get_option( 'ets_profilepress_discord_retry_api_count' ) ) ) );
+			if ( $hook_failed_count < $retry_api_count && $retry_failed_api == true && $action_data['as_group'] == ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME && $action_data['status'] === 'failed' ) {
+				as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), $hook, array_values( $args ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+			}
+		}
+	}
+
+	/**
+	 * Set action scheuduler batch size.
+	 *
+	 * @param INT $batch_size
+	 * @return INT $concurrent_batches
+	 */
+	public function ets_profilepress_discord_queue_batch_size( $batch_size ) {
+		if ( ets_profilepress_discord_get_all_pending_actions() !== false ) {
+			return absint( get_option( 'ets_profilepress_discord_job_queue_batch_size' ) );
+		} else {
+			return $batch_size;
+		}
+	}
+
+	/**
+	 * Set action scheuduler concurrent batches.
+	 *
+	 * @param INT $concurrent_batches
+	 * @return INT $concurrent_batches
+	 */
+	public function ets_profilepress_discord_concurrent_batches( $concurrent_batches ) {
+		if ( ets_profilepress_discord_get_all_pending_actions() !== false ) {
+			return absint( get_option( 'ets_profilepress_discord_job_queue_concurrency' ) );
+		} else {
+			return $concurrent_batches;
+		}
+	}
+
+	/**
 	 * Discord Logo
 	 *
 	 * @since    1.0.0

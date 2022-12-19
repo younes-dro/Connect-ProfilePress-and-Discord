@@ -280,3 +280,86 @@ function ets_profilepress_discord_allowed_html() {
 
 	return $allowed_html;
 }
+
+/**
+ * Get Action data from table `actionscheduler_actions`.
+ *
+ * @param INT $action_id Action id.
+ *
+ * @return ARRAY|BOOL
+ */
+function ets_profilepress_discord_as_get_action_data( $action_id ) {
+	global $wpdb;
+	$result = $wpdb->get_results( $wpdb->prepare( 'SELECT aa.hook, aa.status, aa.args, ag.slug AS as_group FROM ' . $wpdb->prefix . 'actionscheduler_actions as aa INNER JOIN ' . $wpdb->prefix . 'actionscheduler_groups as ag ON aa.group_id=ag.group_id WHERE `action_id`=%d AND ag.slug=%s', $action_id, ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME ), ARRAY_A );
+
+	if ( ! empty( $result ) ) {
+		return $result[0];
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Get how many times a hook is failed in a particular day.
+ *
+ * @param STRING $hook
+ *
+ * @return INT|BOOL
+ */
+function ets_profilepress_discord_count_of_hooks_failures( $hook ) {
+	global $wpdb;
+	$result = $wpdb->get_results( $wpdb->prepare( 'SELECT count(last_attempt_gmt) as hook_failed_count FROM ' . $wpdb->prefix . 'actionscheduler_actions WHERE `hook`=%s AND status="failed" AND DATE(last_attempt_gmt) = %s', $hook, date( 'Y-m-d' ) ), ARRAY_A );
+
+	if ( ! empty( $result ) ) {
+		return $result['0']['hook_failed_count'];
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Get randon integer between a predefined range.
+ *
+ * @param INT $add_upon
+ *
+ * @return INT
+ */
+function ets_profilepress_discord_get_random_timestamp( $add_upon = '' ) {
+	if ( $add_upon != '' && $add_upon !== false ) {
+		return $add_upon + random_int( 5, 15 );
+	} else {
+		return strtotime( 'now' ) + random_int( 5, 15 );
+	}
+}
+
+/**
+ * Get the highest available last attempt schedule time.
+ *
+ * @return INT|FALSE
+ */
+function ets_profilepress_discord_get_highest_last_attempt_timestamp() {
+	global $wpdb;
+	$result = $wpdb->get_results( $wpdb->prepare( 'SELECT aa.last_attempt_gmt FROM ' . $wpdb->prefix . 'actionscheduler_actions as aa INNER JOIN ' . $wpdb->prefix . 'actionscheduler_groups as ag ON aa.group_id = ag.group_id WHERE ag.slug = %s ORDER BY aa.last_attempt_gmt DESC limit 1', ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME ), ARRAY_A );
+
+	if ( ! empty( $result ) ) {
+		return strtotime( $result['0']['last_attempt_gmt'] );
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Get pending jobs.
+ *
+ * @return ARRAY|FALSE
+ */
+function ets_profilepress_discord_get_all_pending_actions() {
+	global $wpdb;
+	$result = $wpdb->get_results( $wpdb->prepare( 'SELECT aa.* FROM ' . $wpdb->prefix . 'actionscheduler_actions as aa INNER JOIN ' . $wpdb->prefix . 'actionscheduler_groups as ag ON aa.group_id = ag.group_id WHERE ag.slug = %s AND aa.status="pending" ', ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME ), ARRAY_A );
+
+	if ( ! empty( $result ) ) {
+		return $result['0'];
+	} else {
+		return false;
+	}
+}

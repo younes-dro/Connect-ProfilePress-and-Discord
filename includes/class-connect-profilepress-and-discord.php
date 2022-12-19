@@ -100,6 +100,11 @@ class Connect_Profilepress_And_Discord {
 	private function load_dependencies() {
 
 		/**
+		 * The class responsible for defining all methods that help to schedule actions.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/libraries/action-scheduler/action-scheduler.php';
+
+		/**
 		 * The class responsible for Logs
 		 * core plugin.
 		 */

@@ -437,16 +437,16 @@ class Connect_Profilepress_And_Discord_Public {
 		$ets_profilepress_discord_role_mapping = json_decode( get_option( 'ets_profilepress_discord_role_mapping' ), true );
 		$discord_role                          = '';
 		$discord_roles                         = array();
-		$user_subscription                     = map_deep( ets_profilepress_get_active_subscriptions( $user_id ), 'sanitize_text_field' );
+		$user_subscriptions                    = map_deep( ets_profilepress_get_active_subscriptions( $user_id ), 'sanitize_text_field' );
 
 		$ets_profilepress_discord_send_welcome_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_welcome_dm' ) ) );
-		if ( is_array( $user_subscription ) ) {
-			foreach ( $user_subscription as $plan_id ) {
+		if ( is_array( $user_subscriptions ) ) {
+			foreach ( $user_subscriptions as $user_subscription ) {
 
-				if ( is_array( $ets_profilepress_discord_role_mapping ) && array_key_exists( 'profilepress_plan_id_' . $plan_id, $ets_profilepress_discord_role_mapping ) ) {
-					$discord_role = sanitize_text_field( trim( $ets_profilepress_discord_role_mapping[ 'profilepress_plan_id_' . $plan_id ] ) );
+				if ( is_array( $ets_profilepress_discord_role_mapping ) && array_key_exists( 'profilepress_plan_id_' . $user_subscription->plan_id, $ets_profilepress_discord_role_mapping ) ) {
+					$discord_role = sanitize_text_field( trim( $ets_profilepress_discord_role_mapping[ 'profilepress_plan_id_' . $user_subscription->plan_id ] ) );
 					array_push( $discord_roles, $discord_role );
-					update_user_meta( $user_id, '_ets_profilepress_discord_role_id_for_' . $plan_id, $discord_role );
+					update_user_meta( $user_id, '_ets_profilepress_discord_role_id_for_' . $user_subscription->plan_id, $discord_role );
 				}
 			}
 		}
@@ -493,7 +493,7 @@ class Connect_Profilepress_And_Discord_Public {
 
 		// Send welcome message.
 		if ( $ets_profilepress_discord_send_welcome_dm == true ) {
-			as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $user_subscription, 'welcome' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+			as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $user_subscriptions, 'welcome' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
 		}
 	}
 

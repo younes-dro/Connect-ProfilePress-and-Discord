@@ -199,6 +199,10 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'ppress_myaccount_edit_profile', $plugin_public, 'ets_profilepress_discord_connect_button' );
 		$this->loader->add_shortcode( 'ets_ppress_discord', $plugin_public, 'ets_profilepress_discord_add_connect_button' );
 		$this->loader->add_filter( 'kses_allowed_protocols', $plugin_public, 'ets_profilepress_discord_allow_data_protocol' );
+		$this->loader->add_action( 'init', $plugin_public, 'ets_profilepress_discord_api_callback' );
+		$this->loader->add_action( 'ets_profilepress_discord_as_handle_add_member_to_guild', $plugin_public, 'ets_profilepress_discord_as_handler_add_member_to_guild', 10, 3 );
+		$this->loader->add_action( 'ets_profilepress_discord_as_schedule_member_put_role', $plugin_public, 'ets_profilepress_discord_as_handler_put_member_role', 10, 3 );
+		$this->loader->add_action( 'ets_profilepress_discord_as_send_dm', $plugin_public, 'ets_profilepress_discord_handler_send_dm', 10, 4 );
 
 	}
 

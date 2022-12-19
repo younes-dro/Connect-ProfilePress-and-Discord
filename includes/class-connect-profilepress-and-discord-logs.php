@@ -25,12 +25,12 @@ class Connect_Profilepress_And_Discord_Logs {
 	public function ets_profilepress_discord_clear_logs() {
 
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 12', 403 );
 			exit();
 		}
 		// Check for nonce security
 		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 13', 403 );
 			exit();
 		}
 		try {

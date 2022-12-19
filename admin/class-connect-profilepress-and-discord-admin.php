@@ -130,7 +130,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_ppress_discord_setting_page() {
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 1', 403 );
 			exit();
 		}
 		wp_enqueue_style( $this->plugin_name . 'skeletabs.css' );
@@ -154,7 +154,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_profilepress_discord_application_settings() {
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 2', 403 );
 			exit();
 		}
 		$ets_profilepress_discord_client_id = isset( $_POST['ets_profilepress_discord_client_id'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_client_id'] ) ) : '';
@@ -222,12 +222,12 @@ class Connect_Profilepress_And_Discord_Admin {
 	public function ets_profilepress_discord_update_redirect_url() {
 
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 3', 403 );
 			exit();
 		}
 		// Check for nonce security
 		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 4', 403 );
 			exit();
 		}
 
@@ -254,12 +254,12 @@ class Connect_Profilepress_And_Discord_Admin {
 	public function ets_profilepress_discord_load_discord_roles() {
 
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 5', 403 );
 			exit();
 		}
 		// Check for nonce security
 		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 6', 403 );
 			exit();
 		}
 		$user_id = get_current_user_id();
@@ -325,7 +325,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_profilepress_discord_save_role_mapping() {
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 7', 403 );
 			exit();
 		}
 		$ets_discord_roles = isset( $_POST['ets_profilepress_discord_role_mapping'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_role_mapping'] ) ) : '';
@@ -366,7 +366,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	public function ets_profilepress_discord_save_advance_settings() {
 
 		if ( ! current_user_can( 'administrator' ) || ! wp_verify_nonce( $_POST['ets_profilepress_discord_advance_settings_nonce'], 'profilepress_discord_advance_settings_nonce' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 8', 403 );
 			exit();
 		}
 
@@ -449,7 +449,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_profilepress_discord_save_appearance_settings() {
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 9', 403 );
 			exit();
 		}
 
@@ -493,7 +493,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	public function ets_profilepress_discord_send_support_mail() {
 
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			wp_send_json_error( 'You do not have sufficient rights 10', 403 );
 			exit();
 		}
 
@@ -501,7 +501,7 @@ class Connect_Profilepress_And_Discord_Admin {
 
 			// Check for nonce security
 			if ( ! wp_verify_nonce( $_POST['ets_discord_send_support_mail'], 'send_support_mail' ) ) {
-				wp_send_json_error( 'You do not have sufficient rights', 403 );
+				wp_send_json_error( 'You do not have sufficient rights 11', 403 );
 				exit();
 			}
 

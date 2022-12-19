@@ -46,7 +46,28 @@ $log_api_res          = sanitize_text_field( trim( get_option( 'ets_profilepress
 	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLANS], [SITE_URL], [BLOG_NAME]</small>
 		</fieldset></td>
 	</tr>
-
+	<tr>
+		<th scope="row"><?php esc_html_e( 'Retry Failed API calls', 'connect-profilepress-and-discord' ); ?></th>
+		<td> <fieldset>
+		<input name="ets_profilepress_retry_failed_api" type="checkbox" id="ets_profilepress_retry_failed_api" 
+		<?php
+		if ( $retry_failed_api == true ) {
+			echo esc_attr( 'checked="checked"' ); }
+		?>
+		 value="1">
+		</fieldset></td>
+	  </tr> 
+	  <tr>
+		<th scope="row"><?php esc_html_e( 'Don\'t kick users upon disconnect', 'connect-profilepress-and-discord' ); ?></th>
+		<td> <fieldset>
+		<input name="ets_profilepress_kick_upon_disconnect" type="checkbox" id="ets_profilepress_kick_upon_disconnect" 
+		<?php
+		if ( $kick_upon_disconnect == true ) {
+			echo esc_attr( 'checked="checked"' ); }
+		?>
+		 value="1">
+		</fieldset></td>
+	  </tr>	  
 	<tr>
 		<th scope="row"><?php esc_html_e( 'How many times a failed API call should get re-try', 'connect-profilepress-and-discord' ); ?></th>
 		<td> <fieldset>

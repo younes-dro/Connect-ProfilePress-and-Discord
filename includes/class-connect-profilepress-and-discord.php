@@ -100,6 +100,11 @@ class Connect_Profilepress_And_Discord {
 	private function load_dependencies() {
 
 		/**
+		 * The class responsible for defining all methods that help to schedule actions.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/libraries/action-scheduler/action-scheduler.php';
+
+		/**
 		 * The class responsible for Logs
 		 * core plugin.
 		 */
@@ -194,7 +199,62 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'ppress_myaccount_edit_profile', $plugin_public, 'ets_profilepress_discord_connect_button' );
 		$this->loader->add_shortcode( 'ets_ppress_discord', $plugin_public, 'ets_profilepress_discord_add_connect_button' );
 		$this->loader->add_filter( 'kses_allowed_protocols', $plugin_public, 'ets_profilepress_discord_allow_data_protocol' );
+		$this->loader->add_action( 'init', $plugin_public, 'ets_profilepress_discord_api_callback' );
+		$this->loader->add_action( 'ets_profilepress_discord_as_handle_add_member_to_guild', $plugin_public, 'ets_profilepress_discord_as_handler_add_member_to_guild', 10, 3 );
+		$this->loader->add_action( 'ets_profilepress_discord_as_schedule_member_put_role', $plugin_public, 'ets_profilepress_discord_as_handler_put_member_role', 10, 3 );
+		$this->loader->add_action( 'ets_profilepress_discord_as_send_dm', $plugin_public, 'ets_profilepress_discord_handler_send_dm', 10, 4 );
 
+	}
+
+	/**
+	 * Re-schedule  failed action
+	 *
+	 * @param INT            $action_id
+	 * @param OBJECT         $e
+	 * @param OBJECT context
+	 * @return NONE
+	 */
+	public function ets_profilepress_discord_reschedule_failed_action( $action_id ) {
+		// First check if the action is for profilepress discord.
+		$action_data = ets_profilepress_discord_as_get_action_data( $action_id );
+		if ( $action_data !== false ) {
+			$hook              = $action_data['hook'];
+			$args              = json_decode( $action_data['args'] );
+			$retry_failed_api  = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_retry_failed_api' ) ) );
+			$hook_failed_count = ets_profilepress_discord_count_of_hooks_failures( $hook );
+			$retry_api_count   = absint( sanitize_text_field( trim( get_option( 'ets_profilepress_discord_retry_api_count' ) ) ) );
+			if ( $hook_failed_count < $retry_api_count && $retry_failed_api == true && $action_data['as_group'] == ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME && $action_data['status'] === 'failed' ) {
+				as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), $hook, array_values( $args ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+			}
+		}
+	}
+
+	/**
+	 * Set action scheuduler batch size.
+	 *
+	 * @param INT $batch_size
+	 * @return INT $concurrent_batches
+	 */
+	public function ets_profilepress_discord_queue_batch_size( $batch_size ) {
+		if ( ets_profilepress_discord_get_all_pending_actions() !== false ) {
+			return absint( get_option( 'ets_profilepress_discord_job_queue_batch_size' ) );
+		} else {
+			return $batch_size;
+		}
+	}
+
+	/**
+	 * Set action scheuduler concurrent batches.
+	 *
+	 * @param INT $concurrent_batches
+	 * @return INT $concurrent_batches
+	 */
+	public function ets_profilepress_discord_concurrent_batches( $concurrent_batches ) {
+		if ( ets_profilepress_discord_get_all_pending_actions() !== false ) {
+			return absint( get_option( 'ets_profilepress_discord_job_queue_concurrency' ) );
+		} else {
+			return $concurrent_batches;
+		}
 	}
 
 	/**

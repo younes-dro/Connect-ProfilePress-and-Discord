@@ -394,3 +394,47 @@ function ets_profilepress_discord_get_all_pending_actions() {
 		return false;
 	}
 }
+
+/**
+ * Get student's roles ids
+ *
+ * @param INT $user_id
+ * @return ARRAY|NULL $roles
+ */
+function ets_profilepress_discord_get_user_roles( $user_id ) {
+	global $wpdb;
+
+	$usermeta_table     = $wpdb->prefix . 'usermeta';
+	$user_roles_sql     = 'SELECT * FROM ' . $usermeta_table . " WHERE `user_id` = %d AND ( `meta_key` like '_ets_profilepress_discord_role_id_for_%' OR `meta_key` = 'ets_profilepress_discord_default_role_id' OR `meta_key` = '_ets_profilepress_discord_last_default_role' ); ";
+	$user_roles_prepare = $wpdb->prepare( $user_roles_sql, $user_id );
+
+	$user_roles = $wpdb->get_results( $user_roles_prepare, ARRAY_A );
+
+	if ( is_array( $user_roles ) && count( $user_roles ) ) {
+		$roles = array();
+		foreach ( $user_roles as  $role ) {
+
+			array_push( $roles, $role['meta_value'] );
+		}
+
+		return $roles;
+
+	} else {
+		return null;
+	}
+}
+
+/**
+ * Remove all usermeta created by this plugin.
+ *
+ * @param INT $user_id The User's id.
+ */
+function ets_profilepress_discord_remove_usermeta( $user_id ) {
+
+	global $wpdb;
+
+	$usermeta_table      = $wpdb->prefix . 'usermeta';
+	$usermeta_sql        = 'DELETE FROM ' . $usermeta_table . " WHERE `user_id` = %d AND  `meta_key` LIKE '_ets_profilepress_discord%'; ";
+	$delete_usermeta_sql = $wpdb->prepare( $usermeta_sql, $user_id );
+	$wpdb->query( $delete_usermeta_sql );
+}

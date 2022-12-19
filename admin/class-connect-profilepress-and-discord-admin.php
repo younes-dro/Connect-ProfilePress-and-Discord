@@ -373,8 +373,8 @@ class Connect_Profilepress_And_Discord_Admin {
 			$ets_profilepress_discord_send_welcome_dm = isset( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ) : '';
 			$ets_profilepress_discord_welcome_message = isset( $_POST['ets_profilepress_discord_welcome_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_welcome_message'] ) ) : '';
 
-			$retry_failed_api     = isset( $_POST['retry_failed_api'] ) ? sanitize_textarea_field( trim( $_POST['retry_failed_api'] ) ) : '';
-			$kick_upon_disconnect = isset( $_POST['kick_upon_disconnect'] ) ? sanitize_textarea_field( trim( $_POST['kick_upon_disconnect'] ) ) : '';
+			$retry_failed_api     = isset( $_POST['ets_profilepress_retry_failed_api'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_failed_api'] ) ) : '';
+			$kick_upon_disconnect = isset( $_POST['ets_profilepress_kick_upon_disconnect'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_kick_upon_disconnect'] ) ) : '';
 			$retry_api_count      = isset( $_POST['ets_profilepress_retry_api_count'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_api_count'] ) ) : '';
 			$set_job_cnrc         = isset( $_POST['set_job_cnrc'] ) ? sanitize_textarea_field( trim( $_POST['set_job_cnrc'] ) ) : '';
 			$set_job_q_batch_size = isset( $_POST['set_job_q_batch_size'] ) ? sanitize_textarea_field( trim( $_POST['set_job_q_batch_size'] ) ) : '';
@@ -395,12 +395,12 @@ class Connect_Profilepress_And_Discord_Admin {
 					update_option( 'ets_profilepress_discord_welcome_message', '' );
 				}
 
-				if ( isset( $_POST['retry_failed_api'] ) ) {
+				if ( isset( $_POST['ets_profilepress_retry_failed_api'] ) ) {
 					update_option( 'ets_profilepress_discord_retry_failed_api', true );
 				} else {
 					update_option( 'ets_profilepress_discord_retry_failed_api', false );
 				}
-				if ( isset( $_POST['kick_upon_disconnect'] ) ) {
+				if ( isset( $_POST['ets_profilepress_kick_upon_disconnect'] ) ) {
 					update_option( 'ets_profilepress_discord_kick_upon_disconnect', true );
 				} else {
 					update_option( 'ets_profilepress_discord_kick_upon_disconnect', false );

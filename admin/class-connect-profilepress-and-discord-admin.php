@@ -593,4 +593,20 @@ class Connect_Profilepress_And_Discord_Admin {
 		}
 	}
 
+	/**
+	 * Method to remove user from discord
+	 *
+	 * @param INT $user_id The User 's ID.
+	 */
+	public function ets_ppress_discord_remove_user_from_server( $user_id ) {
+		if ( ! is_user_logged_in() && current_user_can( 'remove_users' ) ) {
+			wp_send_json_error( 'Unauthorized user', 401 );
+			exit();
+		}
+		if ( $user_id ) {
+			$this->profilepress_discord_public_instance->delete_member_from_guild( $user_id, false );
+			ets_profilepress_discord_remove_usermeta( $user_id );
+		}
+	}
+
 }

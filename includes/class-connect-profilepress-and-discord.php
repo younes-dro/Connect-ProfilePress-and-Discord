@@ -181,6 +181,10 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_appearance_settings', $plugin_admin, 'ets_profilepress_discord_save_appearance_settings' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_send_support_mail', $plugin_admin, 'ets_profilepress_discord_send_support_mail' );
 		$this->loader->add_action( 'ppress_subscription_status_updated', $plugin_admin, 'ets_ppress_subscription_status_updated', 10, 3 );
+		$this->loader->add_action( 'delete_user', $plugin_admin, 'ets_ppress_discord_remove_user_from_server' );
+		if ( is_multisite() ) {
+			$this->loader->add_action( 'remove_user_from_blog', $plugin_admin, 'ets_ppress_discord_remove_user_from_server' );
+		}
 
 	}
 

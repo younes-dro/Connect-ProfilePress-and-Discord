@@ -307,6 +307,7 @@ function ets_profilepress_discord_allowed_html() {
 			'class' => array(),
 		),
 		'h2'     => array(),
+		'strong' => array(),
 	);
 
 	return $allowed_html;

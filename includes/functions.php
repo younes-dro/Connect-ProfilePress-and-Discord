@@ -205,7 +205,7 @@ function ets_profilepress_get_active_subscriptions( $user_id ) {
 	$active_subscriptions_sql = "
 	SELECT s.plan_id FROM `{$wpdb->prefix}ppress_subscriptions` s 
 	INNER JOIN {$wpdb->prefix}ppress_customers c on c.id = s.customer_id 
-	where s.status = 'active' 
+	where ( s.status = 'active' OR s.status= 'completed' ) 
 	and c.user_id =%d;";
 	$plan_ids                 = $wpdb->get_results( $wpdb->prepare( $active_subscriptions_sql, $user_id ) );
 	if ( is_array( $plan_ids ) && count( $plan_ids ) > 0 ) {

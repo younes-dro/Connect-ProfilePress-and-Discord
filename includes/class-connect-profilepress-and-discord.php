@@ -185,6 +185,9 @@ class Connect_Profilepress_And_Discord {
 		if ( is_multisite() ) {
 			$this->loader->add_action( 'remove_user_from_blog', $plugin_admin, 'ets_ppress_discord_remove_user_from_server' );
 		}
+		$this->loader->add_filter( 'manage_users_columns', $plugin_admin, 'ets_ppress_discord_add_disconnect_discord_column' );
+		$this->loader->add_filter( 'manage_users_custom_column', $plugin_admin, 'ets_ppress_discord_add_disconnect_discord_button', 99, 3 );
+		$this->loader->add_action( 'wp_ajax_ets_profilepress_discord_disconnect_user', $plugin_admin, 'ets_profilepress_discord_disconnect_user' );
 
 	}
 

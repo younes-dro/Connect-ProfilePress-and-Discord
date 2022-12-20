@@ -396,7 +396,7 @@ function ets_profilepress_discord_get_all_pending_actions() {
 }
 
 /**
- * Get student's roles ids
+ * Get customer's roles ids
  *
  * @param INT $user_id
  * @return ARRAY|NULL $roles

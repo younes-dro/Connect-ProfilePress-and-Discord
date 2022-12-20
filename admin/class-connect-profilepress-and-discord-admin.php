@@ -609,4 +609,81 @@ class Connect_Profilepress_And_Discord_Admin {
 		}
 	}
 
+	/**
+	 * Add ProfilePress Discord column to WP Users listing.
+	 *
+	 * @param array $columns 
+	 * @return NONE
+	 */ 
+	public function ets_ppress_discord_add_disconnect_discord_column( $columns ) {
+
+		$columns['ets_profilepress_discord_disconnect'] = esc_html__( 'ProfilePress Discord', 'connect-profilepress-and-discord' );
+		return $columns;
+	}
+
+	/**
+	 * Display Discord Disconnect button.
+	 *
+	 * @param array $columns 
+	 *
+	 */
+	public function ets_ppress_discord_add_disconnect_discord_button( $value, $column_name, $user_id ) {
+
+		if ( $column_name === 'ets_profilepress_discord_disconnect' ) {
+			wp_enqueue_script( $this->plugin_name );
+			wp_enqueue_style( $this->plugin_name );
+			$access_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+			$_ets_profilepress_discord_username = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_username', true ) ) );
+			if ( $access_token  ){
+				return '<button  data-user-id="' . esc_attr( $user_id )  . '" class="profilepress-disconnect-discord-user button-primary" >' . esc_html__( 'Disconnect from discord ', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white() .  '</button><span class="spinner"></span><p>' . esc_html__( sprintf( 'Connected account: %s', $_ets_profilepress_discord_username ), 'connect-profilepress-and-discord' ) . '</p>';
+			}
+			return esc_html__( 'Not Connected', 'connect-profilepress-and-discord' );
+		}
+		return $value;
+	}
+
+	/**
+	 * Run disconnect discord.
+	 *
+	 */
+	public function ets_profilepress_discord_disconnect_user() {
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		// Check for nonce security
+		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		$user_id              = sanitize_text_field( trim( $_POST['ets_profilepress_discord_user_id'] ) );
+		$kick_upon_disconnect = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_kick_upon_disconnect' ) ) );
+		$access_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+		$refresh_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
+		if ( $user_id && $access_token && $refresh_token ) {
+			delete_user_meta( $user_id, '_ets_profilepress_discord_access_token' );
+			delete_user_meta( $user_id, '_ets_profilepress_discord_refresh_token' );
+/* 			$user_roles = ets_profilepress_discord_get_user_roles( $user_id );
+			if ( $kick_upon_disconnect ) {
+
+				if( is_array( $user_roles ) ) {
+					foreach ( $user_roles as $user_role ) {
+						$this->profilepress_discord_public_instance->delete_discord_role( $user_id, $user_role );
+					}
+				}
+			} else { */
+				$this->profilepress_discord_public_instance->delete_member_from_guild( $user_id, false );
+			//}
+
+			$event_res = array(
+				'status'  => 1,
+				'message' => 'Successfully disconnected',
+			);
+			wp_send_json( $event_res );
+			exit();
+		}
+		exit();
+	}
+
 }

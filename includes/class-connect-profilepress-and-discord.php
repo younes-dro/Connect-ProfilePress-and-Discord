@@ -168,7 +168,7 @@ class Connect_Profilepress_And_Discord {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Connect_Profilepress_And_Discord_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Connect_Profilepress_And_Discord_Admin( $this->get_plugin_name(), $this->get_version(), Connect_Profilepress_And_Discord_Public::get_profilepress_discord_public_instance( $this->get_plugin_name(), $this->get_version() ) );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -180,6 +180,11 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_advance_settings', $plugin_admin, 'ets_profilepress_discord_save_advance_settings' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_appearance_settings', $plugin_admin, 'ets_profilepress_discord_save_appearance_settings' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_send_support_mail', $plugin_admin, 'ets_profilepress_discord_send_support_mail' );
+		$this->loader->add_action( 'ppress_subscription_status_updated', $plugin_admin, 'ets_ppress_subscription_status_updated', 10, 3 );
+		$this->loader->add_action( 'delete_user', $plugin_admin, 'ets_ppress_discord_remove_user_from_server' );
+		if ( is_multisite() ) {
+			$this->loader->add_action( 'remove_user_from_blog', $plugin_admin, 'ets_ppress_discord_remove_user_from_server' );
+		}
 
 	}
 
@@ -203,6 +208,9 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'ets_profilepress_discord_as_handle_add_member_to_guild', $plugin_public, 'ets_profilepress_discord_as_handler_add_member_to_guild', 10, 3 );
 		$this->loader->add_action( 'ets_profilepress_discord_as_schedule_member_put_role', $plugin_public, 'ets_profilepress_discord_as_handler_put_member_role', 10, 3 );
 		$this->loader->add_action( 'ets_profilepress_discord_as_send_dm', $plugin_public, 'ets_profilepress_discord_handler_send_dm', 10, 4 );
+		$this->loader->add_action( 'wp_ajax_profilepress_disconnect_from_discord', $plugin_public, 'ets_profilepress_discord_disconnect_from_discord' );
+		$this->loader->add_action( 'ets_profilepress_discord_as_schedule_delete_role', $plugin_public, 'ets_profilepress_discord_as_handler_delete_memberrole', 10, 3 );
+		$this->loader->add_action( 'ets_profilepress_discord_as_schedule_delete_member', $plugin_public, 'ets_profilepress_discord_as_handler_delete_member_from_guild', 10, 3 );
 
 	}
 

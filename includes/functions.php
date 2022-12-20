@@ -205,7 +205,7 @@ function ets_profilepress_get_active_subscriptions( $user_id ) {
 	$active_subscriptions_sql = "
 	SELECT s.plan_id FROM `{$wpdb->prefix}ppress_subscriptions` s 
 	INNER JOIN {$wpdb->prefix}ppress_customers c on c.id = s.customer_id 
-	where s.status = 'active' 
+	where ( s.status = 'active' OR s.status= 'completed' ) 
 	and c.user_id =%d;";
 	$plan_ids                 = $wpdb->get_results( $wpdb->prepare( $active_subscriptions_sql, $user_id ) );
 	if ( is_array( $plan_ids ) && count( $plan_ids ) > 0 ) {
@@ -392,5 +392,71 @@ function ets_profilepress_discord_get_all_pending_actions() {
 		return $result['0'];
 	} else {
 		return false;
+	}
+}
+
+/**
+ * Get student's roles ids
+ *
+ * @param INT $user_id
+ * @return ARRAY|NULL $roles
+ */
+function ets_profilepress_discord_get_user_roles( $user_id ) {
+	global $wpdb;
+
+	$usermeta_table     = $wpdb->prefix . 'usermeta';
+	$user_roles_sql     = 'SELECT * FROM ' . $usermeta_table . " WHERE `user_id` = %d AND ( `meta_key` like '_ets_profilepress_discord_role_id_for_%' OR `meta_key` = 'ets_profilepress_discord_default_role_id' OR `meta_key` = '_ets_profilepress_discord_last_default_role' ); ";
+	$user_roles_prepare = $wpdb->prepare( $user_roles_sql, $user_id );
+
+	$user_roles = $wpdb->get_results( $user_roles_prepare, ARRAY_A );
+
+	if ( is_array( $user_roles ) && count( $user_roles ) ) {
+		$roles = array();
+		foreach ( $user_roles as  $role ) {
+
+			array_push( $roles, $role['meta_value'] );
+		}
+
+		return $roles;
+
+	} else {
+		return null;
+	}
+}
+
+/**
+ * Remove all usermeta created by this plugin.
+ *
+ * @param INT $user_id The User's id.
+ */
+function ets_profilepress_discord_remove_usermeta( $user_id ) {
+
+	global $wpdb;
+
+	$usermeta_table      = $wpdb->prefix . 'usermeta';
+	$usermeta_sql        = 'DELETE FROM ' . $usermeta_table . " WHERE `user_id` = %d AND  `meta_key` LIKE '_ets_profilepress_discord%'; ";
+	$delete_usermeta_sql = $wpdb->prepare( $usermeta_sql, $user_id );
+	$wpdb->query( $delete_usermeta_sql );
+}
+
+/**
+ * Get the user's Id form customer id.
+ *
+ * @param INT $customer_id The customer id.
+ * @return INT|NULL
+ */
+function ets_profilepress_discord_get_user_id( $customer_id ) {
+
+	global $wpdb;
+
+	$customer_table  = $wpdb->prefix . 'ppress_customers';
+	$user_id_sql     = 'SELECT `user_id` FROM ' . $customer_table . ' WHERE `id` = %d';
+	$user_id_prepare = $wpdb->prepare( $user_id_sql, $customer_id );
+	$user_id_result  = $wpdb->get_results( $user_id_prepare, ARRAY_A );
+
+	if ( is_array( $user_id_result ) && count( $user_id_result ) > 0 ) {
+		return (int) $user_id_result[0]['user_id'];
+	} else {
+		return null;
 	}
 }

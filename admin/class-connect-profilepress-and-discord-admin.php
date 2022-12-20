@@ -41,16 +41,26 @@ class Connect_Profilepress_And_Discord_Admin {
 	private $version;
 
 	/**
+	 * Instance of Connect_Profilepress_And_Discord_Public class.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      Connect_Profilepress_And_Discord_Public
+	 */
+	private $profilepress_discord_public_instance;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 * @param      string $plugin_name       The name of this plugin.
 	 * @param      string $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $profilepress_discord_public_instance ) {
 
-		$this->plugin_name = $plugin_name;
-		$this->version     = $version;
+		$this->plugin_name                          = $plugin_name;
+		$this->version                              = $version;
+		$this->profilepress_discord_public_instance = $profilepress_discord_public_instance;
 
 	}
 
@@ -535,6 +545,67 @@ class Connect_Profilepress_And_Discord_Admin {
 					wp_safe_redirect( $pre_location );
 				}
 			}
+		}
+	}
+
+	/**
+	 *
+	 */
+	public function ets_ppress_subscription_status_updated( $subscription_status, $old_status, $subscription ) {
+
+		/*
+			  update_option( 'ppress_status_updated_plan_id_' . time(), $object->plan_id );
+		update_option( 'ppress_status_updated_object_' . time(), serialize( $object ) );
+		update_option( 'ppress_status_updated_old_' . time(), $old_status );
+		update_option( 'ppress_status_updated_' . time(), $subscription_status ); */
+
+		$user_id = ets_profilepress_discord_get_user_id( $subscription->customer_id );
+		if ( $subscription_status === 'completed' ) {
+			$access_token  = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+			$refresh_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
+			if ( $access_token && $refresh_token ) {
+				$ets_profilepress_discord_role_mapping = json_decode( get_option( 'ets_profilepress_discord_role_mapping' ), true );
+				if ( is_array( $ets_profilepress_discord_role_mapping ) && array_key_exists( 'profilepress_plan_id_' . $subscription->plan_id, $ets_profilepress_discord_role_mapping ) ) {
+					$discord_role = sanitize_text_field( trim( $ets_profilepress_discord_role_mapping[ 'profilepress_plan_id_' . $subscription->plan_id ] ) );
+					if ( $discord_role && $discord_role != 'none' ) {
+						$this->profilepress_discord_public_instance->put_discord_role_api( $user_id, $discord_role );
+						update_user_meta( $user_id, '_ets_profilepress_discord_role_id_for_' . $subscription->plan_id, $discord_role );
+					}
+				}
+			}
+
+			return;
+		} else {
+			$access_token  = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+			$refresh_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
+			if ( $access_token && $refresh_token ) {
+				$ets_profilepress_discord_role_mapping = json_decode( get_option( 'ets_profilepress_discord_role_mapping' ), true );
+				if ( is_array( $ets_profilepress_discord_role_mapping ) && array_key_exists( 'profilepress_plan_id_' . $subscription->plan_id, $ets_profilepress_discord_role_mapping ) ) {
+					$discord_role = sanitize_text_field( trim( $ets_profilepress_discord_role_mapping[ 'profilepress_plan_id_' . $subscription->plan_id ] ) );
+					if ( $discord_role && $discord_role != 'none' ) {
+						$this->profilepress_discord_public_instance->delete_discord_role( $user_id, $discord_role );
+						delete_user_meta( $user_id, '_ets_profilepress_discord_role_id_for_' . $subscription->plan_id );
+					}
+				}
+			}
+
+			return;
+		}
+	}
+
+	/**
+	 * Method to remove user from discord
+	 *
+	 * @param INT $user_id The User 's ID.
+	 */
+	public function ets_ppress_discord_remove_user_from_server( $user_id ) {
+		if ( ! is_user_logged_in() && current_user_can( 'remove_users' ) ) {
+			wp_send_json_error( 'Unauthorized user', 401 );
+			exit();
+		}
+		if ( $user_id ) {
+			$this->profilepress_discord_public_instance->delete_member_from_guild( $user_id, false );
+			ets_profilepress_discord_remove_usermeta( $user_id );
 		}
 	}
 

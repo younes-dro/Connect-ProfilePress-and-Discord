@@ -686,4 +686,25 @@ class Connect_Profilepress_And_Discord_Admin {
 		exit();
 	}
 
+	/**
+	 * 
+	 */
+	public function ets_ppress_admin_customer_data_after_billing_address($customer_id, $customer_data ) {
+
+		wp_enqueue_script( $this->plugin_name );
+		wp_enqueue_style( $this->plugin_name );
+		$user_id = ets_profilepress_discord_get_user_id( $customer_id );
+		$access_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+		$_ets_profilepress_discord_username = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_username', true ) ) );
+		$discord_connection_status = '';
+		if ( $access_token ) {
+			$discord_connection_status = '<p><strong>Discord:</strong><button  data-user-id="' . esc_attr( $user_id )  . '" class="profilepress-disconnect-discord-user button-primary" >' . __( 'Disconnect from discord ', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white() . '</button><span class="spinner"></span><p>' . __( sprintf( 'Connected account: %s', $_ets_profilepress_discord_username ), 'connect-profilepress-and-discord' ) . '</p></p>';
+		} else {
+			$discord_connection_status = '<p><strong>Discord:</strong>' . __( 'Not Connected', 'connect-profilepress-and-discord' ) . '</p>';
+		}
+
+		_e( wp_kses( $discord_connection_status, ets_profilepress_discord_allowed_html() ) );
+
+	}
+
 }

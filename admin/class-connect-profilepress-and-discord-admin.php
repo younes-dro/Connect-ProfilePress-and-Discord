@@ -560,7 +560,7 @@ class Connect_Profilepress_And_Discord_Admin {
 		update_option( 'ppress_status_updated_' . time(), $subscription_status ); */
 
 		$user_id = ets_profilepress_discord_get_user_id( $subscription->customer_id );
-		if ( $subscription_status === 'completed' && $user_id ) {
+		if ( $subscription_status === 'completed' ) {
 			$access_token  = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
 			$refresh_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
 			if ( $access_token && $refresh_token ) {
@@ -573,6 +573,23 @@ class Connect_Profilepress_And_Discord_Admin {
 					}
 				}
 			}
+
+			return;
+		} else {
+			$access_token  = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+			$refresh_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
+			if ( $access_token && $refresh_token ) {
+				$ets_profilepress_discord_role_mapping = json_decode( get_option( 'ets_profilepress_discord_role_mapping' ), true );
+				if ( is_array( $ets_profilepress_discord_role_mapping ) && array_key_exists( 'profilepress_plan_id_' . $subscription->plan_id, $ets_profilepress_discord_role_mapping ) ) {
+					$discord_role = sanitize_text_field( trim( $ets_profilepress_discord_role_mapping[ 'profilepress_plan_id_' . $subscription->plan_id ] ) );
+					if ( $discord_role && $discord_role != 'none' ) {
+						$this->profilepress_discord_public_instance->delete_discord_role( $user_id, $discord_role );
+						delete_user_meta( $user_id, '_ets_profilepress_discord_role_id_for_' . $subscription->plan_id );
+					}
+				}
+			}
+
+			return;
 		}
 	}
 

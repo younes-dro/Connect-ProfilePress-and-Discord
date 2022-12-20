@@ -587,3 +587,7 @@
     display: inline-block;
     margin-left: 10px;  
   }
+  button.profilepress-disconnect-discord-user > img.ets-discord-logo-white{
+    max-width: 16px;
+    width: 16px;
+  }

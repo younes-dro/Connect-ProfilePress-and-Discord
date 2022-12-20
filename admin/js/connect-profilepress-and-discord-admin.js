@@ -283,10 +283,41 @@
 					$(".clr-log.spinner").removeClass("is-active").hide();
 				}
 			});
-		});		
-		
-		$('#ets_profilepress_discord_connect_button_bg_color').wpColorPicker();
-		$('#ets_profilepress_discord_disconnect_button_bg_color').wpColorPicker();
+		});
+
+		if ( $.fn.wpColorPicker ) {
+			$('#ets_profilepress_discord_connect_button_bg_color').wpColorPicker();
+			$('#ets_profilepress_discord_disconnect_button_bg_color').wpColorPicker();
+		}
+
+
+		$('.profilepress-disconnect-discord-user').click(function (e) {
+			e.preventDefault();
+			$.ajax({
+				url: etsProfilePressParams.admin_ajax,
+				type: "POST",
+				context: this,
+				data: { 'action': 'ets_profilepress_discord_disconnect_user', 'ets_profilepress_discord_user_id': $(this).data('user-id') , 'ets_profilepress_discord_nonce': etsProfilePressParams.ets_profilepress_discord_nonce },
+				beforeSend: function () {
+						$(this).next('span.spinner').css('display','inline-block').addClass("is-active").show();
+				},
+				success: function (data) {         
+					if (data.error) {
+						// handle the error
+						alert(data.error.msg);
+					} else {
+						$(this).prop('disabled', true);
+						console.log(data);
+					}
+				},
+				error: function (response, textStatus, errorThrown ) {
+					console.log( textStatus + " :  " + response.status + " : " + errorThrown );
+				},
+				complete: function () {
+					$(this).next('span.spinner').removeClass("is-active").hide();
+				}
+			});
+		});
 
 	}); // Document Ready
 

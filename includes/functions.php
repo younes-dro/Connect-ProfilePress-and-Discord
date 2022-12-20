@@ -438,3 +438,25 @@ function ets_profilepress_discord_remove_usermeta( $user_id ) {
 	$delete_usermeta_sql = $wpdb->prepare( $usermeta_sql, $user_id );
 	$wpdb->query( $delete_usermeta_sql );
 }
+
+/**
+ * Get the user's Id form customer id.
+ *
+ * @param INT $customer_id The customer id.
+ * @return INT|NULL
+ */
+function ets_profilepress_discord_get_user_id( $customer_id ) {
+
+	global $wpdb;
+
+	$customer_table  = $wpdb->prefix . 'ppress_customers';
+	$user_id_sql     = 'SELECT `user_id` FROM ' . $customer_table . ' WHERE `id` = %d';
+	$user_id_prepare = $wpdb->prepare( $user_id_sql, $customer_id );
+	$user_id_result  = $wpdb->get_results( $user_id_prepare, ARRAY_A );
+
+	if ( is_array( $user_id_result ) && count( $user_id_result ) > 0 ) {
+		return (int) $user_id_result[0]['user_id'];
+	} else {
+		return null;
+	}
+}

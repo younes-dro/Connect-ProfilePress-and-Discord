@@ -168,7 +168,7 @@ class Connect_Profilepress_And_Discord {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Connect_Profilepress_And_Discord_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Connect_Profilepress_And_Discord_Admin( $this->get_plugin_name(), $this->get_version(), Connect_Profilepress_And_Discord_Public::get_profilepress_discord_public_instance( $this->get_plugin_name(), $this->get_version() ) );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -180,6 +180,7 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_advance_settings', $plugin_admin, 'ets_profilepress_discord_save_advance_settings' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_save_appearance_settings', $plugin_admin, 'ets_profilepress_discord_save_appearance_settings' );
 		$this->loader->add_action( 'admin_post_profilepress_discord_send_support_mail', $plugin_admin, 'ets_profilepress_discord_send_support_mail' );
+		$this->loader->add_action( 'ppress_subscription_status_updated', $plugin_admin, 'ets_ppress_subscription_status_updated', 10, 3 );
 
 	}
 

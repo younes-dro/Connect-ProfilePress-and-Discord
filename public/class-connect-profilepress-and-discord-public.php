@@ -41,6 +41,15 @@ class Connect_Profilepress_And_Discord_Public {
 	private $version;
 
 	/**
+	 * The single object Connect_Profilepress_And_Discord_Public
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var Connect_Profilepress_And_Discord_Public
+	 */
+	private static $instance;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -52,6 +61,21 @@ class Connect_Profilepress_And_Discord_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
+	}
+
+	/**
+	 * Get single instance of the Connect_Profilepress_And_Discord_Public.
+	 *
+	 * @param STRING $plugin_name The plugin name.
+	 * @param STRING $version The plugin version.
+	 */
+	public static function get_profilepress_discord_public_instance( $plugin_name, $version ) {
+
+		if ( ! self::$instance ) {
+			self::$instance = new Connect_Profilepress_And_Discord_Public( $plugin_name, $version );
+
+		}
+		return self::$instance;
 	}
 
 	/**

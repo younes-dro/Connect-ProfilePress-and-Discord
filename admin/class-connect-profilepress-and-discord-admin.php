@@ -380,8 +380,11 @@ class Connect_Profilepress_And_Discord_Admin {
 			exit();
 		}
 
-			$ets_profilepress_discord_send_welcome_dm = isset( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ) : '';
+			$ets_profilepress_discord_send_welcome_dm = isset( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ) : '';
 			$ets_profilepress_discord_welcome_message = isset( $_POST['ets_profilepress_discord_welcome_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_welcome_message'] ) ) : '';
+
+			$ets_profilepress_discord_send_purchase_dm = isset( $_POST['ets_profilepress_discord_send_purchase_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_purchase_dm'] ) ) : '';
+			$ets_profilepress_discord_purchase_message = isset( $_POST['ets_profilepress_discord_purchase_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_purchase_message'] ) ) : '';			
 
 			$retry_failed_api     = isset( $_POST['ets_profilepress_retry_failed_api'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_failed_api'] ) ) : '';
 			$kick_upon_disconnect = isset( $_POST['ets_profilepress_kick_upon_disconnect'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_kick_upon_disconnect'] ) ) : '';
@@ -403,6 +406,17 @@ class Connect_Profilepress_And_Discord_Admin {
 					update_option( 'ets_profilepress_discord_welcome_message', $ets_profilepress_discord_welcome_message );
 				} else {
 					update_option( 'ets_profilepress_discord_welcome_message', '' );
+				}
+
+				if ( $ets_profilepress_discord_send_purchase_dm ) {
+					update_option( 'ets_profilepress_discord_send_purchase_dm', true );
+				} else {
+					update_option( 'ets_profilepress_discord_send_purchase_dm', false );
+				}
+				if ( isset( $ets_profilepress_discord_purchase_message ) && $ets_profilepress_discord_purchase_message != '' ) {
+					update_option( 'ets_profilepress_discord_purchase_message', $ets_profilepress_discord_purchase_message );
+				} else {
+					update_option( 'ets_profilepress_discord_purchase_message', '' );
 				}
 
 				if ( isset( $_POST['ets_profilepress_retry_failed_api'] ) ) {

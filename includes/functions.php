@@ -215,6 +215,30 @@ function ets_profilepress_get_active_subscriptions( $user_id ) {
 	}
 
 }
+
+/**
+ * Get Plans name for customer.
+ *
+ * @param INT $user_id
+ */
+function ets_profilepress_discord_get_plans_name( $user_id ) {
+
+	global $wpdb;
+
+	$plans_name_sql = " SELECT p.name FROM {$wpdb->prefix}ppress_subscriptions s 
+	INNER JOIN {$wpdb->prefix}ppress_customers c on c.id = s.customer_id 
+    INNER JOIN {$wpdb->prefix}ppress_plans p on p.id = s.plan_id
+	where ( s.status = 'active' OR s.status= 'completed' ) 
+	and c.user_id =%d;";
+	$plan_names     = $wpdb->get_results( $wpdb->prepare( $plans_name_sql, $user_id ) );
+	if ( is_array( $plan_names ) && count( $plan_names ) > 0 ) {
+		return $plan_names;
+	} else {
+		return null;
+	}
+
+}
+
 /**
  * Return the discord user avatar.
  *
@@ -460,4 +484,51 @@ function ets_profilepress_discord_get_user_id( $customer_id ) {
 	} else {
 		return null;
 	}
+}
+
+/**
+ * Get formatted message to send in DM.
+ *
+ * @param INT    $user_id The user ID.
+ * @param STRING $message The formatted message to send to discord.
+ * Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLANS], [SITE_URL], [BLOG_NAME].
+ */
+function ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $message ) {
+
+	$user_obj   = get_user_by( 'id', $user_id );
+	$USERNAME   = sanitize_text_field( $user_obj->user_login );
+	$USER_EMAIL = sanitize_email( $user_obj->user_email );
+	$SITE_URL   = esc_url( get_bloginfo( 'url' ) );
+	$BLOG_NAME  = sanitize_text_field( get_bloginfo( 'name' ) );
+
+	$plans = ets_profilepress_discord_get_plans_name( $user_id );
+	if ( is_array( $plans ) && count( $plans ) > 0 ) {
+		$PLANS_NAMES = '';
+		$lastKey    = array_key_last( $plans );
+		$commas     = ', ';
+		foreach( $plans as $key=> $plan ) {
+			if ( $lastKey === $key ) {
+				$commas = ' ';
+			}
+			$PLANS_NAMES .= sanitize_text_field( $plan->name ) . $commas;
+		}
+	}
+
+	$find    = array(
+			'[PPRESS_PLANS]',
+			'[PPRESS_USER_NAME]',
+			'[PPRESS_USER_EMAIL]',
+			'[SITE_URL]',
+			'[BLOG_NAME]',
+		);
+	$replace = array(
+			$PLANS_NAMES,
+			$USERNAME,
+			$USER_EMAIL,
+			$SITE_URL,
+			$BLOG_NAME,
+	);
+
+	return str_replace( $find, $replace, $message );
+
 }

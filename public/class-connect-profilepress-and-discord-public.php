@@ -586,13 +586,11 @@ class Connect_Profilepress_And_Discord_Public {
 	/**
 	 * Discord DM a member using bot.
 	 *
-	 * @param INT       $user_id The User's ID.
-	 * @param ARRAY     $ranks_user The User's ranks.
-	 * @param ARRAY|INT $rank_user (Array of ranks | achievement_id).
-	 * @param STRING    $type (warning|expired).
-	 * @param INT       $points Achievement points awarded.
+	 * @param INT    $user_id The User's ID.
+	 * @param ARRAY  $user_subscriptions The User's subscriptions.
+	 * @param STRING $type (welcome|warning|expired).
 	 */
-	public function ets_profilepress_discord_handler_send_dm( $user_id, $ranks_user, $type = 'warning', $points = '' ) {
+	public function ets_profilepress_discord_handler_send_dm( $user_id, $user_subscriptions, $type = 'welcome' ) {
 		$discord_user_id   = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_user_id', true ) ) );
 		$discord_bot_token = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_bot_token' ) ) );
 
@@ -610,8 +608,7 @@ class Connect_Profilepress_And_Discord_Public {
 		}
 
 		if ( $type == 'welcome' ) {
-			$message = 'Welcome Profile Press!';
-			// $message = ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $ranks_user, $ets_profilepress_discord_welcome_message );
+			$message = ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $ets_profilepress_discord_welcome_message );
 		}
 
 		$creat_dm_url = ETS_PROFILEPRESS_DISCORD_API_URL . '/channels/' . $dm_channel_id . '/messages';

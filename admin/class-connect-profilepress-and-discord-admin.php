@@ -386,6 +386,9 @@ class Connect_Profilepress_And_Discord_Admin {
 			$ets_profilepress_discord_send_purchase_dm = isset( $_POST['ets_profilepress_discord_send_purchase_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_purchase_dm'] ) ) : '';
 			$ets_profilepress_discord_purchase_message = isset( $_POST['ets_profilepress_discord_purchase_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_purchase_message'] ) ) : '';			
 
+			$ets_profilepress_discord_send_cancelled_dm = isset( $_POST['ets_profilepress_discord_send_cancelled_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_cancelled_dm'] ) ) : '';
+			$ets_profilepress_discord_cancelled_message = isset( $_POST['ets_profilepress_discord_cancelled_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_cancelled_message'] ) ) : '';	
+
 			$retry_failed_api     = isset( $_POST['ets_profilepress_retry_failed_api'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_failed_api'] ) ) : '';
 			$kick_upon_disconnect = isset( $_POST['ets_profilepress_kick_upon_disconnect'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_kick_upon_disconnect'] ) ) : '';
 			$retry_api_count      = isset( $_POST['ets_profilepress_retry_api_count'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_api_count'] ) ) : '';
@@ -418,6 +421,17 @@ class Connect_Profilepress_And_Discord_Admin {
 				} else {
 					update_option( 'ets_profilepress_discord_purchase_message', '' );
 				}
+
+				if ( $ets_profilepress_discord_send_cancelled_dm ) {
+					update_option( 'ets_profilepress_discord_send_cancelled_dm', true );
+				} else {
+					update_option( 'ets_profilepress_discord_send_cancelled_dm', false );
+				}
+				if ( isset( $ets_profilepress_discord_cancelled_message ) && $ets_profilepress_discord_cancelled_message != '' ) {
+					update_option( 'ets_profilepress_discord_cancelled_message', $ets_profilepress_discord_cancelled_message );
+				} else {
+					update_option( 'ets_profilepress_discord_cancelled_message', '' );
+				}				
 
 				if ( isset( $_POST['ets_profilepress_retry_failed_api'] ) ) {
 					update_option( 'ets_profilepress_discord_retry_failed_api', true );

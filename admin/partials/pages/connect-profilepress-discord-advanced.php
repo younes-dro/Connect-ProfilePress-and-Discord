@@ -5,6 +5,9 @@ $ets_profilepress_discord_welcome_message = sanitize_text_field( trim( get_optio
 $ets_profilepress_discord_send_purchase_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_purchase_dm' ) ) );
 $ets_profilepress_discord_purchase_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_purchase_message' ) ) );
 
+$ets_profilepress_discord_send_cancelled_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_cancelled_dm' ) ) );
+$ets_profilepress_discord_cancelled_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_cancelled_message' ) ) );
+
 $retry_failed_api     = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_retry_failed_api' ) ) );
 $kick_upon_disconnect = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_kick_upon_disconnect' ) ) );
 $retry_api_count      = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_retry_api_count' ) ) );
@@ -67,6 +70,26 @@ $log_api_res          = sanitize_text_field( trim( get_option( 'ets_profilepress
 	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLANS], [SITE_URL], [BLOG_NAME]</small>
 		</fieldset></td>
 	</tr>	
+	<tr>
+		<th scope="row"><?php esc_html_e( 'Send Cancelled subscription Message', 'connect-profilepress-and-discord' ); ?></th>
+		<td> <fieldset>
+		<input name="ets_profilepress_discord_send_cancelled_dm" type="checkbox" id="ets_profilepress_discord_send_cancelled_dm" 
+		<?php
+		if ( $ets_profilepress_discord_send_cancelled_dm == true ) {
+			echo esc_attr( 'checked="checked"' ); }
+		?>
+		 value="1">
+		</fieldset></td>
+	</tr>
+	<tr>
+		<th scope="row"><?php esc_html_e( 'Cancelled message', 'connect-profilepress-and-discord' ); ?></th>
+		<td> <fieldset>
+			<?php $ets_profilepress_discord_cancelled_message_value = ( isset( $ets_profilepress_discord_cancelled_message ) ) ? $ets_profilepress_discord_cancelled_message : ''; ?>
+		<textarea class="ets_profilepress_discord_cancelled_message_textarea" name="ets_profilepress_discord_cancelled_message" id="ets_profilepress_discord_cancelled_message" row="25" cols="50"><?php echo esc_textarea( wp_unslash( $ets_profilepress_discord_cancelled_message_value ) ); ?></textarea> 
+	<br/>
+	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLANS], [SITE_URL], [BLOG_NAME]</small>
+		</fieldset></td>
+	</tr>		
 	<tr>
 		<th scope="row"><?php esc_html_e( 'Retry Failed API calls', 'connect-profilepress-and-discord' ); ?></th>
 		<td> <fieldset>

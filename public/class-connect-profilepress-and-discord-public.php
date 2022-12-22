@@ -587,12 +587,10 @@ class Connect_Profilepress_And_Discord_Public {
 	 * Discord DM a member using bot.
 	 *
 	 * @param INT       $user_id The User's ID.
-	 * @param ARRAY     $ranks_user The User's ranks.
-	 * @param ARRAY|INT $rank_user (Array of ranks | achievement_id).
-	 * @param STRING    $type (warning|expired).
-	 * @param INT       $points Achievement points awarded.
+	 * @param ARRAY|INT $data The User's subscriptions OR plan id .
+	 * @param STRING    $type (welcome|purchase|cancelled).
 	 */
-	public function ets_profilepress_discord_handler_send_dm( $user_id, $ranks_user, $type = 'warning', $points = '' ) {
+	public function ets_profilepress_discord_handler_send_dm( $user_id, $data, $type = 'welcome' ) {
 		$discord_user_id   = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_user_id', true ) ) );
 		$discord_bot_token = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_bot_token' ) ) );
 
@@ -610,8 +608,18 @@ class Connect_Profilepress_And_Discord_Public {
 		}
 
 		if ( $type == 'welcome' ) {
-			$message = 'Welcome Profile Press!';
-			// $message = ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $ranks_user, $ets_profilepress_discord_welcome_message );
+			$message = ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $ets_profilepress_discord_welcome_message );
+		}
+
+		if( $type == 'purchase' ) {
+			$ets_profilepress_discord_send_purchase_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_purchase_message' ) ) );
+			$message = ets_profilepress_discord_get_formatted_purchase_dm( $user_id, $data, $ets_profilepress_discord_send_purchase_message );
+
+		}
+
+		if ( $type == 'cancelled' ) {
+			$ets_profilepress_discord_cancelled_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_cancelled_message' ) ) );
+			$message = ets_profilepress_discord_get_formatted_cancelled_dm( $user_id, $data, $ets_profilepress_discord_cancelled_message );
 		}
 
 		$creat_dm_url = ETS_PROFILEPRESS_DISCORD_API_URL . '/channels/' . $dm_channel_id . '/messages';

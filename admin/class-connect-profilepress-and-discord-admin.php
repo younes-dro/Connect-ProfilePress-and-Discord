@@ -380,8 +380,14 @@ class Connect_Profilepress_And_Discord_Admin {
 			exit();
 		}
 
-			$ets_profilepress_discord_send_welcome_dm = isset( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ) : '';
+			$ets_profilepress_discord_send_welcome_dm = isset( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_welcome_dm'] ) ) : '';
 			$ets_profilepress_discord_welcome_message = isset( $_POST['ets_profilepress_discord_welcome_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_welcome_message'] ) ) : '';
+
+			$ets_profilepress_discord_send_purchase_dm = isset( $_POST['ets_profilepress_discord_send_purchase_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_purchase_dm'] ) ) : '';
+			$ets_profilepress_discord_purchase_message = isset( $_POST['ets_profilepress_discord_purchase_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_purchase_message'] ) ) : '';
+
+			$ets_profilepress_discord_send_cancelled_dm = isset( $_POST['ets_profilepress_discord_send_cancelled_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_cancelled_dm'] ) ) : '';
+			$ets_profilepress_discord_cancelled_message = isset( $_POST['ets_profilepress_discord_cancelled_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_cancelled_message'] ) ) : '';
 
 			$retry_failed_api     = isset( $_POST['ets_profilepress_retry_failed_api'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_failed_api'] ) ) : '';
 			$kick_upon_disconnect = isset( $_POST['ets_profilepress_kick_upon_disconnect'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_kick_upon_disconnect'] ) ) : '';
@@ -403,6 +409,28 @@ class Connect_Profilepress_And_Discord_Admin {
 					update_option( 'ets_profilepress_discord_welcome_message', $ets_profilepress_discord_welcome_message );
 				} else {
 					update_option( 'ets_profilepress_discord_welcome_message', '' );
+				}
+
+				if ( $ets_profilepress_discord_send_purchase_dm ) {
+					update_option( 'ets_profilepress_discord_send_purchase_dm', true );
+				} else {
+					update_option( 'ets_profilepress_discord_send_purchase_dm', false );
+				}
+				if ( isset( $ets_profilepress_discord_purchase_message ) && $ets_profilepress_discord_purchase_message != '' ) {
+					update_option( 'ets_profilepress_discord_purchase_message', $ets_profilepress_discord_purchase_message );
+				} else {
+					update_option( 'ets_profilepress_discord_purchase_message', '' );
+				}
+
+				if ( $ets_profilepress_discord_send_cancelled_dm ) {
+					update_option( 'ets_profilepress_discord_send_cancelled_dm', true );
+				} else {
+					update_option( 'ets_profilepress_discord_send_cancelled_dm', false );
+				}
+				if ( isset( $ets_profilepress_discord_cancelled_message ) && $ets_profilepress_discord_cancelled_message != '' ) {
+					update_option( 'ets_profilepress_discord_cancelled_message', $ets_profilepress_discord_cancelled_message );
+				} else {
+					update_option( 'ets_profilepress_discord_cancelled_message', '' );
 				}
 
 				if ( isset( $_POST['ets_profilepress_retry_failed_api'] ) ) {
@@ -553,11 +581,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_ppress_subscription_status_updated( $subscription_status, $old_status, $subscription ) {
 
-		/*
-			  update_option( 'ppress_status_updated_plan_id_' . time(), $object->plan_id );
-		update_option( 'ppress_status_updated_object_' . time(), serialize( $object ) );
-		update_option( 'ppress_status_updated_old_' . time(), $old_status );
-		update_option( 'ppress_status_updated_' . time(), $subscription_status ); */
+
 
 		$user_id = ets_profilepress_discord_get_user_id( $subscription->customer_id );
 		if ( $subscription_status === 'completed' ) {
@@ -589,6 +613,14 @@ class Connect_Profilepress_And_Discord_Admin {
 				}
 			}
 
+			if ( $subscription_status === 'cancelled' ) {
+				// Send DM subsciption is cancelled
+				$ets_profilepress_discord_send_cancelled_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_cancelled_dm' ) ) );
+				if ( $ets_profilepress_discord_send_cancelled_dm == true ) {
+					as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $subscription->plan_id, 'cancelled' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+				}
+			}
+
 			return;
 		}
 	}
@@ -612,9 +644,9 @@ class Connect_Profilepress_And_Discord_Admin {
 	/**
 	 * Add ProfilePress Discord column to WP Users listing.
 	 *
-	 * @param array $columns 
+	 * @param array $columns
 	 * @return NONE
-	 */ 
+	 */
 	public function ets_ppress_discord_add_disconnect_discord_column( $columns ) {
 
 		$columns['ets_profilepress_discord_disconnect'] = esc_html__( 'ProfilePress Discord', 'connect-profilepress-and-discord' );
@@ -624,18 +656,17 @@ class Connect_Profilepress_And_Discord_Admin {
 	/**
 	 * Display Discord Disconnect button.
 	 *
-	 * @param array $columns 
-	 *
+	 * @param array $columns
 	 */
 	public function ets_ppress_discord_add_disconnect_discord_button( $value, $column_name, $user_id ) {
 
 		if ( $column_name === 'ets_profilepress_discord_disconnect' ) {
 			wp_enqueue_script( $this->plugin_name );
 			wp_enqueue_style( $this->plugin_name );
-			$access_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+			$access_token                       = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
 			$_ets_profilepress_discord_username = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_username', true ) ) );
-			if ( $access_token  ){
-				return '<button  data-user-id="' . esc_attr( $user_id )  . '" class="profilepress-disconnect-discord-user button-primary" >' . esc_html__( 'Disconnect from discord ', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white() .  '</button><span class="spinner"></span><p>' . esc_html__( sprintf( 'Connected account: %s', $_ets_profilepress_discord_username ), 'connect-profilepress-and-discord' ) . '</p>';
+			if ( $access_token ) {
+				return '<button  data-user-id="' . esc_attr( $user_id ) . '" class="profilepress-disconnect-discord-user button-primary" >' . esc_html__( 'Disconnect from discord ', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white() . '</button><span class="spinner"></span><p>' . esc_html__( sprintf( 'Connected account: %s', $_ets_profilepress_discord_username ), 'connect-profilepress-and-discord' ) . '</p>';
 			}
 			return esc_html__( 'Not Connected', 'connect-profilepress-and-discord' );
 		}
@@ -644,7 +675,6 @@ class Connect_Profilepress_And_Discord_Admin {
 
 	/**
 	 * Run disconnect discord.
-	 *
 	 */
 	public function ets_profilepress_discord_disconnect_user() {
 
@@ -659,12 +689,13 @@ class Connect_Profilepress_And_Discord_Admin {
 		}
 		$user_id              = sanitize_text_field( trim( $_POST['ets_profilepress_discord_user_id'] ) );
 		$kick_upon_disconnect = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_kick_upon_disconnect' ) ) );
-		$access_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
-		$refresh_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
+		$access_token         = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+		$refresh_token        = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_refresh_token', true ) ) );
 		if ( $user_id && $access_token && $refresh_token ) {
 			delete_user_meta( $user_id, '_ets_profilepress_discord_access_token' );
 			delete_user_meta( $user_id, '_ets_profilepress_discord_refresh_token' );
-/* 			$user_roles = ets_profilepress_discord_get_user_roles( $user_id );
+			/*
+					  $user_roles = ets_profilepress_discord_get_user_roles( $user_id );
 			if ( $kick_upon_disconnect ) {
 
 				if( is_array( $user_roles ) ) {
@@ -674,7 +705,7 @@ class Connect_Profilepress_And_Discord_Admin {
 				}
 			} else { */
 				$this->profilepress_discord_public_instance->delete_member_from_guild( $user_id, false );
-			//}
+			// }
 
 			$event_res = array(
 				'status'  => 1,
@@ -687,23 +718,46 @@ class Connect_Profilepress_And_Discord_Admin {
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public function ets_ppress_admin_customer_data_after_billing_address($customer_id, $customer_data ) {
+	public function ets_ppress_admin_customer_data_after_billing_address( $customer_id, $customer_data ) {
 
 		wp_enqueue_script( $this->plugin_name );
 		wp_enqueue_style( $this->plugin_name );
-		$user_id = ets_profilepress_discord_get_user_id( $customer_id );
-		$access_token = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
+		$user_id                            = ets_profilepress_discord_get_user_id( $customer_id );
+		$access_token                       = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_access_token', true ) ) );
 		$_ets_profilepress_discord_username = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_username', true ) ) );
-		$discord_connection_status = '';
+		$discord_connection_status          = '';
 		if ( $access_token ) {
-			$discord_connection_status = '<p><strong>Discord:</strong><button  data-user-id="' . esc_attr( $user_id )  . '" class="profilepress-disconnect-discord-user button-primary" >' . __( 'Disconnect from discord ', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white() . '</button><span class="spinner"></span><p>' . __( sprintf( 'Connected account: %s', $_ets_profilepress_discord_username ), 'connect-profilepress-and-discord' ) . '</p></p>';
+			$discord_connection_status = '<p><strong>Discord:</strong><button  data-user-id="' . esc_attr( $user_id ) . '" class="profilepress-disconnect-discord-user button-primary" >' . __( 'Disconnect from discord ', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white() . '</button><span class="spinner"></span><p>' . __( sprintf( 'Connected account: %s', $_ets_profilepress_discord_username ), 'connect-profilepress-and-discord' ) . '</p></p>';
 		} else {
 			$discord_connection_status = '<p><strong>Discord:</strong>' . __( 'Not Connected', 'connect-profilepress-and-discord' ) . '</p>';
 		}
 
 		_e( wp_kses( $discord_connection_status, ets_profilepress_discord_allowed_html() ) );
+
+	}
+
+	/**
+	 * Send a DM new purchase.
+	 * 
+	 * @param INT $reslut 
+	 * @param OBJECT $order The OrderEntity
+	 */
+	public function ets_ppress_discord_order_added( $result, $order ) {
+
+		if ( ! current_user_can( 'administrator' ) && ! is_user_logged_in() ) {
+			wp_send_json_error( 'You do not have sufficient rights to add an order', 403 );
+			exit();
+		}
+		if ( $order->is_completed() == '1' ) {
+			$ets_profilepress_discord_send_purchase_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_purchase_dm' ) ) );
+			// Send DM about purchase
+			if ( $ets_profilepress_discord_send_purchase_dm == true ) {
+				$user_id = ets_profilepress_discord_get_user_id( $order->customer_id );
+				as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $order->get_plan_id(), 'purchase' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+			}
+		}
 
 	}
 

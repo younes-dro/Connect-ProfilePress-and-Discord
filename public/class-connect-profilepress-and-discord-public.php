@@ -588,7 +588,7 @@ class Connect_Profilepress_And_Discord_Public {
 	 *
 	 * @param INT       $user_id The User's ID.
 	 * @param ARRAY|INT $data The User's subscriptions OR plan id .
-	 * @param STRING    $type (welcome|purchase).
+	 * @param STRING    $type (welcome|purchase|cancelled).
 	 */
 	public function ets_profilepress_discord_handler_send_dm( $user_id, $data, $type = 'welcome' ) {
 		$discord_user_id   = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_user_id', true ) ) );
@@ -615,6 +615,11 @@ class Connect_Profilepress_And_Discord_Public {
 			$ets_profilepress_discord_send_purchase_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_purchase_message' ) ) );
 			$message = ets_profilepress_discord_get_formatted_purchase_dm( $user_id, $data, $ets_profilepress_discord_send_purchase_message );
 
+		}
+
+		if ( $type == 'cancelled' ) {
+			$ets_profilepress_discord_cancelled_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_cancelled_message' ) ) );
+			$message = ets_profilepress_discord_get_formatted_cancelled_dm( $user_id, $data, $ets_profilepress_discord_cancelled_message );
 		}
 
 		$creat_dm_url = ETS_PROFILEPRESS_DISCORD_API_URL . '/channels/' . $dm_channel_id . '/messages';

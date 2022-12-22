@@ -581,11 +581,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_ppress_subscription_status_updated( $subscription_status, $old_status, $subscription ) {
 
-		/*
-			  update_option( 'ppress_status_updated_plan_id_' . time(), $object->plan_id );
-		update_option( 'ppress_status_updated_object_' . time(), serialize( $object ) );
-		update_option( 'ppress_status_updated_old_' . time(), $old_status );
-		update_option( 'ppress_status_updated_' . time(), $subscription_status ); */
+
 
 		$user_id = ets_profilepress_discord_get_user_id( $subscription->customer_id );
 		if ( $subscription_status === 'completed' ) {
@@ -614,6 +610,14 @@ class Connect_Profilepress_And_Discord_Admin {
 						$this->profilepress_discord_public_instance->delete_discord_role( $user_id, $discord_role );
 						delete_user_meta( $user_id, '_ets_profilepress_discord_role_id_for_' . $subscription->plan_id );
 					}
+				}
+			}
+
+			if ( $subscription_status === 'cancelled' ) {
+				// Send DM subsciption is cancelled
+				$ets_profilepress_discord_send_cancelled_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_cancelled_dm' ) ) );
+				if ( $ets_profilepress_discord_send_cancelled_dm == true ) {
+					as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $subscription->plan_id, 'cancelled' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
 				}
 			}
 

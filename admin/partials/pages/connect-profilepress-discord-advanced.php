@@ -68,7 +68,7 @@ $log_api_res          = sanitize_text_field( trim( get_option( 'ets_profilepress
 			<?php $ets_profilepress_discord_purchase_message_value = ( isset( $ets_profilepress_discord_purchase_message ) ) ? $ets_profilepress_discord_purchase_message : ''; ?>
 		<textarea class="ets_profilepress_discord_purchase_message_textarea" name="ets_profilepress_discord_purchase_message" id="ets_profilepress_discord_purchase_message" row="25" cols="50"><?php echo esc_textarea( wp_unslash( $ets_profilepress_discord_purchase_message_value ) ); ?></textarea> 
 	<br/>
-	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLANS], [SITE_URL], [BLOG_NAME]</small>
+	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLAN], [SITE_URL], [BLOG_NAME]</small>
 		</fieldset></td>
 	</tr>	
 	<tr>
@@ -88,7 +88,7 @@ $log_api_res          = sanitize_text_field( trim( get_option( 'ets_profilepress
 			<?php $ets_profilepress_discord_cancelled_message_value = ( isset( $ets_profilepress_discord_cancelled_message ) ) ? $ets_profilepress_discord_cancelled_message : ''; ?>
 		<textarea class="ets_profilepress_discord_cancelled_message_textarea" name="ets_profilepress_discord_cancelled_message" id="ets_profilepress_discord_cancelled_message" row="25" cols="50"><?php echo esc_textarea( wp_unslash( $ets_profilepress_discord_cancelled_message_value ) ); ?></textarea> 
 	<br/>
-	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLANS], [SITE_URL], [BLOG_NAME]</small>
+	<small>Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLAN], [SITE_URL], [BLOG_NAME]</small>
 		</fieldset></td>
 	</tr>		
 	<tr>

@@ -538,6 +538,7 @@ function ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $message )
  * Get formatted purchase message to send in DM.
  *
  * @param INT    $user_id The user ID.
+ * @param INT $plan_purchased_id The plan's ID.
  * @param STRING $message The formatted message to send to discord.
  * Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLAN], [SITE_URL], [BLOG_NAME].
  */
@@ -550,17 +551,56 @@ function ets_profilepress_discord_get_formatted_purchase_dm( $user_id, $plan_pur
 	$SITE_URL   = esc_url( get_bloginfo( 'url' ) );
 	$BLOG_NAME  = sanitize_text_field( get_bloginfo( 'name' ) );
 
-	$PLANS_NAME = PlanFactory::fromId( $plan_purchased_id)->get_name();
+	$PLAN_NAME = PlanFactory::fromId( $plan_purchased_id)->get_name();
 
 	$find    = array(
-			'[PPRESS_PLANS]',
+			'[PPRESS_PLAN]',
 			'[PPRESS_USER_NAME]',
 			'[PPRESS_USER_EMAIL]',
 			'[SITE_URL]',
 			'[BLOG_NAME]',
 		);
 	$replace = array(
-			$PLANS_NAME,
+			$PLAN_NAME,
+			$USERNAME,
+			$USER_EMAIL,
+			$SITE_URL,
+			$BLOG_NAME,
+	);
+
+	return str_replace( $find, $replace, $message );
+
+}
+
+/**
+ * Get formatted cancelled subsription message to send in DM.
+ *
+ * @param INT    $user_id The user ID.
+ * @param INT $subscription_id The subcription id.
+ * @param STRING $message The formatted message to send to discord.
+ * Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLAN], [SITE_URL], [BLOG_NAME].
+ */
+function ets_profilepress_discord_get_formatted_cancelled_dm( $user_id, $subscription_id, $message ) {
+
+
+	$user_obj   = get_user_by( 'id', $user_id );
+	$USERNAME   = sanitize_text_field( $user_obj->user_login );
+	$USER_EMAIL = sanitize_email( $user_obj->user_email );
+	$SITE_URL   = esc_url( get_bloginfo( 'url' ) );
+	$BLOG_NAME  = sanitize_text_field( get_bloginfo( 'name' ) );
+
+	$PLAN_NAME = PlanFactory::fromId($subscription_id)->get_name();
+	//$PLAN_NAME = $subscription_id;
+
+	$find    = array(
+			'[PPRESS_PLAN]',
+			'[PPRESS_USER_NAME]',
+			'[PPRESS_USER_EMAIL]',
+			'[SITE_URL]',
+			'[BLOG_NAME]',
+		);
+	$replace = array(
+			$PLAN_NAME,
 			$USERNAME,
 			$USER_EMAIL,
 			$SITE_URL,

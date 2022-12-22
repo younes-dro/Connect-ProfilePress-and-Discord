@@ -189,6 +189,8 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_filter( 'manage_users_custom_column', $plugin_admin, 'ets_ppress_discord_add_disconnect_discord_button', 99, 3 );
 		$this->loader->add_action( 'wp_ajax_ets_profilepress_discord_disconnect_user', $plugin_admin, 'ets_profilepress_discord_disconnect_user' );
 		$this->loader->add_action( 'ppress_admin_customer_data_after_billing_address', $plugin_admin, 'ets_ppress_admin_customer_data_after_billing_address', 10, 2 );
+		// $this->loader->add_action( 'ppress_order_completed', $plugin_admin, 'ets_ppress_discord_order_completed' );
+		$this->loader->add_action( 'ppress_order_added', $plugin_admin, 'ets_ppress_discord_order_added', 10, 2 );
 
 	}
 

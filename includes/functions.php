@@ -1,5 +1,6 @@
 <?php
 
+use ProfilePress\Core\Membership\Models\Plan\PlanFactory;
 /**
  * To check settings values saved or not
  *
@@ -523,6 +524,43 @@ function ets_profilepress_discord_get_formatted_welcome_dm( $user_id, $message )
 		);
 	$replace = array(
 			$PLANS_NAMES,
+			$USERNAME,
+			$USER_EMAIL,
+			$SITE_URL,
+			$BLOG_NAME,
+	);
+
+	return str_replace( $find, $replace, $message );
+
+}
+
+/**
+ * Get formatted purchase message to send in DM.
+ *
+ * @param INT    $user_id The user ID.
+ * @param STRING $message The formatted message to send to discord.
+ * Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLAN], [SITE_URL], [BLOG_NAME].
+ */
+function ets_profilepress_discord_get_formatted_purchase_dm( $user_id, $plan_purchased_id, $message ) {
+
+
+	$user_obj   = get_user_by( 'id', $user_id );
+	$USERNAME   = sanitize_text_field( $user_obj->user_login );
+	$USER_EMAIL = sanitize_email( $user_obj->user_email );
+	$SITE_URL   = esc_url( get_bloginfo( 'url' ) );
+	$BLOG_NAME  = sanitize_text_field( get_bloginfo( 'name' ) );
+
+	$PLANS_NAME = PlanFactory::fromId( $plan_purchased_id)->get_name();
+
+	$find    = array(
+			'[PPRESS_PLANS]',
+			'[PPRESS_USER_NAME]',
+			'[PPRESS_USER_EMAIL]',
+			'[SITE_URL]',
+			'[BLOG_NAME]',
+		);
+	$replace = array(
+			$PLANS_NAME,
 			$USERNAME,
 			$USER_EMAIL,
 			$SITE_URL,

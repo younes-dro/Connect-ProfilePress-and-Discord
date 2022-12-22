@@ -1,4 +1,5 @@
 <?php
+
 $ets_profilepress_discord_send_welcome_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_welcome_dm' ) ) );
 $ets_profilepress_discord_welcome_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_welcome_message' ) ) );
 

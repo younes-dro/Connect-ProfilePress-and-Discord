@@ -735,7 +735,10 @@ class Connect_Profilepress_And_Discord_Admin {
 	}
 
 	/**
-	 *
+	 * Send a DM new purchase.
+	 * 
+	 * @param INT $reslut 
+	 * @param OBJECT $order The OrderEntity
 	 */
 	public function ets_ppress_discord_order_added( $result, $order ) {
 
@@ -751,12 +754,6 @@ class Connect_Profilepress_And_Discord_Admin {
 				as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $order->get_plan_id(), 'purchase' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
 			}
 		}
-
-		/*
-			  update_option( 'ppress_new_order_id_' . time(), $order->get_id() );
-		update_option( 'ppress_new_order_plan_id_' . time(), $order->get_plan_id() );
-		update_option( 'ppress_new_order_completed_' . time(), $order->is_completed() );
-		update_option( 'ppress_new_order_customer_id_' . time(), $order->customer_id ); */
 
 	}
 

@@ -649,3 +649,21 @@ function ets_profilepress_discord_get_formatted_expired_dm( $user_id, $subscript
 	return str_replace( $find, $replace, $message );
 
 }
+
+/**
+ * Remove the '_ets_profilepress_discord_role_id_for_*' meta key for a user.
+ * 
+ * Need this feature when "Don't kick users upon disconnect" option is enabled.
+ * to keep it in sync roles.
+ *
+ * @param INT $user_id The User's id.
+ */
+function ets_profilepress_discord_remove_role_id_for( $user_id ) {
+
+	global $wpdb;
+
+	$usermeta_table      = $wpdb->prefix . 'usermeta';
+	$usermeta_sql        = 'DELETE FROM ' . $usermeta_table . " WHERE `user_id` = %d AND  `meta_key` LIKE '_ets_profilepress_discord_role_id_for_%'; ";
+	$delete_usermeta_sql = $wpdb->prepare( $usermeta_sql, $user_id );
+	$wpdb->query( $delete_usermeta_sql );
+}

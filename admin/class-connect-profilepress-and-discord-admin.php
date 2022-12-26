@@ -636,11 +636,11 @@ class Connect_Profilepress_And_Discord_Admin {
 			}
 			if ( $subscription_status === 'expired' ) {
 				// Send DM subsciption is expired.
-				$ets_profilepress_discord_send_cancelled_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_expired_dm' ) ) );
-				if ( $ets_profilepress_discord_send_cancelled_dm == true ) {
-					as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $subscription->plan_id, 'cancelled' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+				$ets_profilepress_discord_send_expired_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_expired_dm' ) ) );
+				if ( $ets_profilepress_discord_send_expired_dm == true ) {
+					as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $subscription->plan_id, 'expired' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
 				}
-			}			
+			}
 
 			return;
 		}

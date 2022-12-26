@@ -29,3 +29,14 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+if ( defined( 'WP_UNINSTALL_PLUGIN' )
+		&& $_REQUEST['plugin'] === 'Connect-ProfilePress-and-Discord/connect-profilepress-and-discord.php'
+		&& $_REQUEST['slug'] === 'connect-profilepress-and-discord'
+	&& wp_verify_nonce( $_REQUEST['_ajax_nonce'], 'updates' )
+  ) {
+
+	global $wpdb;
+
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . "usermeta WHERE `meta_key` LIKE '_ets_profilepress_discord_%'" ) );
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $wpdb->prefix . "options WHERE `option_name` LIKE 'ets_profilepress_discord_%'" ) );
+}

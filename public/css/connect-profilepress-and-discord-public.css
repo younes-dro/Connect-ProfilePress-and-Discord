@@ -52,6 +52,7 @@
     align-items: center; 
     background-color: #28303d;
     margin-right: 5px;
+    margin-bottom: 5px;
  }
  .ets_assigned_role > span > i{
     width: 14px;

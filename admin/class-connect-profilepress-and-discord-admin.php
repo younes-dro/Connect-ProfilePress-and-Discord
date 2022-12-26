@@ -389,6 +389,9 @@ class Connect_Profilepress_And_Discord_Admin {
 			$ets_profilepress_discord_send_cancelled_dm = isset( $_POST['ets_profilepress_discord_send_cancelled_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_cancelled_dm'] ) ) : '';
 			$ets_profilepress_discord_cancelled_message = isset( $_POST['ets_profilepress_discord_cancelled_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_cancelled_message'] ) ) : '';
 
+			$ets_profilepress_discord_send_expired_dm = isset( $_POST['ets_profilepress_discord_send_expired_dm'] ) ? sanitize_text_field( trim( $_POST['ets_profilepress_discord_send_expired_dm'] ) ) : '';
+			$ets_profilepress_discord_expired_message = isset( $_POST['ets_profilepress_discord_expired_message'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_discord_expired_message'] ) ) : '';
+
 			$retry_failed_api     = isset( $_POST['ets_profilepress_retry_failed_api'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_failed_api'] ) ) : '';
 			$kick_upon_disconnect = isset( $_POST['ets_profilepress_kick_upon_disconnect'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_kick_upon_disconnect'] ) ) : '';
 			$retry_api_count      = isset( $_POST['ets_profilepress_retry_api_count'] ) ? sanitize_textarea_field( trim( $_POST['ets_profilepress_retry_api_count'] ) ) : '';
@@ -431,6 +434,17 @@ class Connect_Profilepress_And_Discord_Admin {
 					update_option( 'ets_profilepress_discord_cancelled_message', $ets_profilepress_discord_cancelled_message );
 				} else {
 					update_option( 'ets_profilepress_discord_cancelled_message', '' );
+				}
+
+				if ( $ets_profilepress_discord_send_expired_dm ) {
+					update_option( 'ets_profilepress_discord_send_expired_dm', true );
+				} else {
+					update_option( 'ets_profilepress_discord_send_expired_dm', false );
+				}
+				if ( isset( $ets_profilepress_discord_expired_message ) && $ets_profilepress_discord_expired_message != '' ) {
+					update_option( 'ets_profilepress_discord_expired_message', $ets_profilepress_discord_expired_message );
+				} else {
+					update_option( 'ets_profilepress_discord_expired_message', '' );
 				}
 
 				if ( isset( $_POST['ets_profilepress_retry_failed_api'] ) ) {
@@ -581,7 +595,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_ppress_subscription_status_updated( $subscription_status, $old_status, $subscription ) {
 
-
+		//update_option( 'subscription_status_' . time(), $subscription_status );
 
 		$user_id = ets_profilepress_discord_get_user_id( $subscription->customer_id );
 		if ( $subscription_status === 'completed' ) {
@@ -614,10 +628,17 @@ class Connect_Profilepress_And_Discord_Admin {
 			}
 
 			if ( $subscription_status === 'cancelled' ) {
-				// Send DM subsciption is cancelled
+				// Send DM subsciption is cancelled.
 				$ets_profilepress_discord_send_cancelled_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_cancelled_dm' ) ) );
 				if ( $ets_profilepress_discord_send_cancelled_dm == true ) {
 					as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $subscription->plan_id, 'cancelled' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
+				}
+			}
+			if ( $subscription_status === 'expired' ) {
+				// Send DM subsciption is expired.
+				$ets_profilepress_discord_send_expired_dm = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_send_expired_dm' ) ) );
+				if ( $ets_profilepress_discord_send_expired_dm == true ) {
+					as_schedule_single_action( ets_profilepress_discord_get_random_timestamp( ets_profilepress_discord_get_highest_last_attempt_timestamp() ), 'ets_profilepress_discord_as_send_dm', array( $user_id, $subscription->plan_id, 'expired' ), ETS_PROFILEPRESS_DISCORD_AS_GROUP_NAME );
 				}
 			}
 
@@ -740,8 +761,8 @@ class Connect_Profilepress_And_Discord_Admin {
 
 	/**
 	 * Send a DM new purchase.
-	 * 
-	 * @param INT $reslut 
+	 *
+	 * @param INT    $reslut
 	 * @param OBJECT $order The OrderEntity
 	 */
 	public function ets_ppress_discord_order_added( $result, $order ) {

@@ -208,6 +208,7 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'ppress_myaccount_edit_profile', $plugin_public, 'ets_profilepress_discord_connect_button' );
+		$this->loader->add_action( 'ppress_myaccount_dashboard', $plugin_public, 'ets_profilepress_discord_connect_button' );
 		$this->loader->add_shortcode( 'ets_ppress_discord', $plugin_public, 'ets_profilepress_discord_add_connect_button' );
 		$this->loader->add_filter( 'kses_allowed_protocols', $plugin_public, 'ets_profilepress_discord_allow_data_protocol' );
 		$this->loader->add_action( 'init', $plugin_public, 'ets_profilepress_discord_api_callback' );

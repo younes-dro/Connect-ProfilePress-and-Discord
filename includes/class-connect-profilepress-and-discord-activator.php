@@ -34,6 +34,8 @@ class Connect_Profilepress_And_Discord_Activator {
 		update_option( 'ets_profilepress_discord_purchase_message', 'Hi [PPRESS_USER_NAME] ([PPRESS_USER_EMAIL]), Thank You for Your Purchase: [PPRESS_PLAN] at [SITE_URL] Thanks, Kind Regards, [BLOG_NAME]' );
 		update_option( 'ets_profilepress_discord_send_cancelled_dm', true );
 		update_option( 'ets_profilepress_discord_cancelled_message', 'Hi [PPRESS_USER_NAME] ([PPRESS_USER_EMAIL]), Your subscription for [PPRESS_PLAN] has been cancelled at [SITE_URL] Thanks, Kind Regards, [BLOG_NAME]' );
+		update_option( 'ets_profilepress_discord_send_expired_dm', true );
+		update_option( 'ets_profilepress_discord_expired_message', 'Hi [PPRESS_USER_NAME] ([PPRESS_USER_EMAIL]), Your subscription for [PPRESS_PLAN] has been expired at [SITE_URL] Thanks, Kind Regards, [BLOG_NAME]' );
 		update_option( 'ets_profilepress_discord_retry_failed_api', true );
 		update_option( 'ets_profilepress_discord_connect_button_bg_color', '#7bbc36' );
 		update_option( 'ets_profilepress_discord_disconnect_button_bg_color', '#ff0000' );

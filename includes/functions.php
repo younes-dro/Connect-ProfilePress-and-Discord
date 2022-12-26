@@ -610,3 +610,60 @@ function ets_profilepress_discord_get_formatted_cancelled_dm( $user_id, $subscri
 	return str_replace( $find, $replace, $message );
 
 }
+
+/**
+ * Get formatted cancelled subsription message to send in DM.
+ *
+ * @param INT    $user_id The user ID.
+ * @param INT $subscription_id The subcription id.
+ * @param STRING $message The formatted message to send to discord.
+ * Merge fields: [PPRESS_USER_NAME], [PPRESS_USER_EMAIL], [PPRESS_PLAN], [SITE_URL], [BLOG_NAME].
+ */
+function ets_profilepress_discord_get_formatted_expired_dm( $user_id, $subscription_id, $message ) {
+
+
+	$user_obj   = get_user_by( 'id', $user_id );
+	$USERNAME   = sanitize_text_field( $user_obj->user_login );
+	$USER_EMAIL = sanitize_email( $user_obj->user_email );
+	$SITE_URL   = esc_url( get_bloginfo( 'url' ) );
+	$BLOG_NAME  = sanitize_text_field( get_bloginfo( 'name' ) );
+
+	$PLAN_NAME = PlanFactory::fromId($subscription_id)->get_name();
+	//$PLAN_NAME = $subscription_id;
+
+	$find    = array(
+			'[PPRESS_PLAN]',
+			'[PPRESS_USER_NAME]',
+			'[PPRESS_USER_EMAIL]',
+			'[SITE_URL]',
+			'[BLOG_NAME]',
+		);
+	$replace = array(
+			$PLAN_NAME,
+			$USERNAME,
+			$USER_EMAIL,
+			$SITE_URL,
+			$BLOG_NAME,
+	);
+
+	return str_replace( $find, $replace, $message );
+
+}
+
+/**
+ * Remove the '_ets_profilepress_discord_role_id_for_*' meta key for a user.
+ * 
+ * Need this feature when "Don't kick users upon disconnect" option is enabled.
+ * to keep it in sync roles.
+ *
+ * @param INT $user_id The User's id.
+ */
+function ets_profilepress_discord_remove_role_id_for( $user_id ) {
+
+	global $wpdb;
+
+	$usermeta_table      = $wpdb->prefix . 'usermeta';
+	$usermeta_sql        = 'DELETE FROM ' . $usermeta_table . " WHERE `user_id` = %d AND  `meta_key` LIKE '_ets_profilepress_discord_role_id_for_%'; ";
+	$delete_usermeta_sql = $wpdb->prepare( $usermeta_sql, $user_id );
+	$wpdb->query( $delete_usermeta_sql );
+}

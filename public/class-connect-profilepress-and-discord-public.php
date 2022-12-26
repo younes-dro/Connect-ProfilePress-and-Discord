@@ -588,7 +588,7 @@ class Connect_Profilepress_And_Discord_Public {
 	 *
 	 * @param INT       $user_id The User's ID.
 	 * @param ARRAY|INT $data The User's subscriptions OR plan id .
-	 * @param STRING    $type (welcome|purchase|cancelled).
+	 * @param STRING    $type (welcome|purchase|cancelled|expired).
 	 */
 	public function ets_profilepress_discord_handler_send_dm( $user_id, $data, $type = 'welcome' ) {
 		$discord_user_id   = sanitize_text_field( trim( get_user_meta( $user_id, '_ets_profilepress_discord_user_id', true ) ) );
@@ -621,6 +621,11 @@ class Connect_Profilepress_And_Discord_Public {
 			$ets_profilepress_discord_cancelled_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_cancelled_message' ) ) );
 			$message = ets_profilepress_discord_get_formatted_cancelled_dm( $user_id, $data, $ets_profilepress_discord_cancelled_message );
 		}
+
+		if ( $type == 'expired' ) {
+			$ets_profilepress_discord_expired_message = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_expired_message' ) ) );
+			$message = ets_profilepress_discord_get_formatted_expired_dm( $user_id, $data, $ets_profilepress_discord_expired_message );
+		}		
 
 		$creat_dm_url = ETS_PROFILEPRESS_DISCORD_API_URL . '/channels/' . $dm_channel_id . '/messages';
 
@@ -765,14 +770,15 @@ class Connect_Profilepress_And_Discord_Public {
 		$user_id              = sanitize_text_field( trim( $_POST['user_id'] ) );
 		$kick_upon_disconnect = sanitize_text_field( trim( get_option( 'ets_profilepress_discord_kick_upon_disconnect' ) ) );
 		if ( $user_id ) {
-			delete_user_meta( $user_id, '_ets_profilepress_discord_access_token' );
-			delete_user_meta( $user_id, '_ets_profilepress_discord_refresh_token' );
+			//delete_user_meta( $user_id, '_ets_profilepress_discord_access_token' );
+			//delete_user_meta( $user_id, '_ets_profilepress_discord_refresh_token' );
 			$user_roles = ets_profilepress_discord_get_user_roles( $user_id );
 			if ( $kick_upon_disconnect ) {
 
 				if ( is_array( $user_roles ) ) {
 					foreach ( $user_roles as $user_role ) {
 						$this->delete_discord_role( $user_id, $user_role );
+						ets_profilepress_discord_remove_role_id_for( $user_id );
 					}
 				}
 			} else {

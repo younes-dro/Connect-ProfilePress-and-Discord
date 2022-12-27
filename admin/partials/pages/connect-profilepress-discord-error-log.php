@@ -5,7 +5,7 @@
 	$handle   = fopen( WP_CONTENT_DIR . '/' . $filename, 'a+' );
 if ( $handle ) {
 	while ( ! feof( $handle ) ) {
-		echo fgets( $handle ) . '<br />';
+		echo esc_html( fgets( $handle ) ) . '<br />';
 	}
 	fclose( $handle );
 }

@@ -80,6 +80,7 @@ Please make sure your bot role has the high priority among all other roles your 
 3. Advanced settings.
 4. Connect Button Appearance.
 5. Spot the "Connect to Discord" on ProfilePress account page.
+6. Status Discord connection in Customer Details.
 
 
 

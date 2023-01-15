@@ -16,7 +16,7 @@
  * Plugin Name:       Connect ProfilePress and Discord
  * Plugin URI:        https://www.expresstechsoftwares.com/connect-profilepress-and-discord
  * Description:       Sell private access to your discord server, and assign discord roles as per the membership level of the users.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            ExpressTech Software Solutions Pvt. Ltd.
  * Author URI:        https://www.expresstechsoftwares.com
  * License:           GPL-2.0+
@@ -76,7 +76,7 @@ define( 'ETS_PROFILEPRESS_DISCORD_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'CONNECT_PROFILEPRESS_AND_DISCORD_VERSION', '1.0.0' );
+define( 'CONNECT_PROFILEPRESS_AND_DISCORD_VERSION', '1.0.1' );
 
 /**
  * The code that runs during plugin activation.

@@ -36,7 +36,7 @@ $ets_profilepress_discord_redirect_page_id   = sanitize_text_field( trim( get_op
 	</div>
 	<div class="ets-input-group">
 			<label><?php esc_html_e( 'Admin Redirect URL Connect to bot', 'connect-profilepress-and-discord' ); ?> :</label>
-			<input type="text" class="ets-input" name="ets_profilepress_discord_admin_redirect_url" value="<?php echo esc_url( get_admin_url( '', 'admin.php' ) ) . '?page=connect-profilepress-and-discord&action=profilepress-discord-connect-to-bot'; ?>" readonly required />
+			<input type="text" class="ets-input" name="ets_profilepress_discord_admin_redirect_url" value="<?php echo esc_url( get_admin_url( '', 'admin.php' ) ) . '?page=connect-profilepress-and-discord&via=profilepress-discord-connectBot'; ?>" readonly required />
 			<p class="description msg-green"><b><?php echo __("Copy this URL and paste inside your https://discord.com/developers/applications -> 0Auth2 -> Redirects", "connect-profilepress-and-discord"); ?></b></p>
 		</div>   
 	<div class="ets-input-group">
@@ -79,7 +79,7 @@ $ets_profilepress_discord_redirect_page_id   = sanitize_text_field( trim( get_op
 		<?php esc_html_e( 'Save Settings', 'connect-profilepress-and-discord' ); ?>
 	  </button>
 	  <?php if ( sanitize_text_field( get_option( 'ets_profilepress_discord_client_id' ) ) ) : ?>
-			<a href="?page=connect-profilepress-and-discord&action=profilepress-discord-connect-to-bot" class="ets-btn profilepress-btn-connect-to-bot" id="profilepress-connect-discord-bot"><?php esc_html_e( 'Connect your Bot', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white(); ?> </a>
+			<a href="?action=profilepress-discord-connect-to-bot" class="ets-btn profilepress-btn-connect-to-bot" id="profilepress-connect-discord-bot"><?php esc_html_e( 'Connect your Bot', 'connect-profilepress-and-discord' ) . Connect_Profilepress_And_Discord::get_discord_logo_white(); ?> </a>
 	  <?php endif; ?>
 	</p>
 </form>

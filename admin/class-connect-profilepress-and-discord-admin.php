@@ -157,6 +157,29 @@ class Connect_Profilepress_And_Discord_Admin {
 	}
 
 	/**
+	 * Callback to Connect to bot
+	 *
+	 * @since    1.0.0
+	 */
+	public function ets_profilepress_discord_connect_to_bot() {
+
+		if ( current_user_can( 'administrator' ) && isset( $_GET['action'] ) && $_GET['action'] === 'profilepress-discord-connect-to-bot' ) {
+			$params                    = array(
+				'client_id'     => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_client_id' ) ) ),
+				'redirect_uri'  => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_admin_redirect_url' ) ) ),
+				'response_type' => 'code',
+				'scope'         => 'bot',
+				'permissions' => ETS_PROFILEPRESS_DISCORD_BOT_PERMISSIONS,
+				'guild_id'    => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_server_id' ) ) ),
+				'disable_guild_select' => 'true',
+			);
+			$discord_authorise_api_url = ETS_PROFILEPRESS_DISCORD_API_URL . 'oauth2/authorize?' . http_build_query( $params );
+
+			wp_redirect( $discord_authorise_api_url, 302, get_site_url() );
+			exit();
+		}
+	}
+	/**
 	 * Save application details
 	 *
 	 * @since    1.0.0
@@ -595,7 +618,7 @@ class Connect_Profilepress_And_Discord_Admin {
 	 */
 	public function ets_ppress_subscription_status_updated( $subscription_status, $old_status, $subscription ) {
 
-		//update_option( 'subscription_status_' . time(), $subscription_status );
+		// update_option( 'subscription_status_' . time(), $subscription_status );
 
 		$user_id = ets_profilepress_discord_get_user_id( $subscription->customer_id );
 		if ( $subscription_status === 'completed' ) {

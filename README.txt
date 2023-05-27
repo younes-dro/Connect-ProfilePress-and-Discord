@@ -5,7 +5,7 @@ Tags: discord, membership, ecommerce, user registration, user profile, membershi
 Requires at least: 5.3
 Requires PHP: 7.2.0
 Tested up to: 6.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,9 +53,9 @@ Connect ProfilePress to Discord Plugin Features:
 8. [Product Questions & Answers for WooCommerce](https://wordpress.org/plugins/product-questions-answers-for-woocommerce/)
 9. [Connect Ultimate Member and Discord](https://wordpress.org/plugins/ultimate-member-discord-add-on/)
 10. [Connect BadgeOS and Discord](https://wordpress.org/plugins/connect-badgeos-to-discord/)
-11. [connect Eduma Theme and  Discord](https://wordpress.org/plugins/connect-eduma-theme-to-discord/)
-12. [connect Restrict Content Pro and Discord Addon](https://wordpress.org/plugins/connect-restrictcontentpro-to-discord-addon/)
-13. [connect GamiPress and Discord](https://wordpress.org/plugins/connect-gamipress-and-discord/)
+11. [Connect Eduma Theme and  Discord](https://wordpress.org/plugins/connect-eduma-theme-to-discord/)
+12. [Connect Restrict Content Pro and Discord Addon](https://wordpress.org/plugins/connect-restrictcontentpro-to-discord-addon/)
+13. [Connect GamiPress and Discord](https://wordpress.org/plugins/connect-gamipress-and-discord/)
 
 == Frequently Asked Questions ==
 = I'm getting an error in error Log 'Missing Access'

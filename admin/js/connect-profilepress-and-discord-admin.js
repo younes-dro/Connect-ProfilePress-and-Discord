@@ -325,6 +325,33 @@
 
 	}); // Document Ready
 
+	$(document).ready(function(){
+		$(' .ets-profilepress-discord-review-notice > button.notice-dismiss' ).on('click', function() {
+
+			$.ajax({
+				type: "POST",
+				dataType: "JSON",
+				url: etsProfilePressParams.admin_ajax,
+				data: { 
+					'action': 'ets_profilepress_discord_notice_dismiss', 
+					'ets_profilepress_discord_nonce': etsProfilePressParams.ets_profilepress_discord_nonce
+				},
+				beforeSend: function () {
+					console.log('sending...');
+				},
+				success: function (response) {
+					console.log(response);
+				},
+				error: function (response) {
+					console.error(response);
+				},
+				complete: function () {
+					// 
+				}
+			});
+		});			
+	});
+
 }// Is Admin
 
 			/*Tab options*/

@@ -165,12 +165,12 @@ class Connect_Profilepress_And_Discord_Admin {
 
 		if ( current_user_can( 'administrator' ) && isset( $_GET['action'] ) && $_GET['action'] === 'profilepress-discord-connect-to-bot' ) {
 			$params                    = array(
-				'client_id'     => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_client_id' ) ) ),
-				'redirect_uri'  => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_admin_redirect_url' ) ) ),
-				'response_type' => 'code',
-				'scope'         => 'bot',
-				'permissions' => ETS_PROFILEPRESS_DISCORD_BOT_PERMISSIONS,
-				'guild_id'    => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_server_id' ) ) ),
+				'client_id'            => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_client_id' ) ) ),
+				'redirect_uri'         => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_admin_redirect_url' ) ) ),
+				'response_type'        => 'code',
+				'scope'                => 'bot',
+				'permissions'          => ETS_PROFILEPRESS_DISCORD_BOT_PERMISSIONS,
+				'guild_id'             => sanitize_text_field( trim( get_option( 'ets_profilepress_discord_server_id' ) ) ),
 				'disable_guild_select' => 'true',
 			);
 			$discord_authorise_api_url = ETS_PROFILEPRESS_DISCORD_API_URL . 'oauth2/authorize?' . http_build_query( $params );
@@ -803,6 +803,33 @@ class Connect_Profilepress_And_Discord_Admin {
 			}
 		}
 
+	}
+
+	/**
+	 *
+	 * Update user meta notification
+	 */
+	public function ets_profilepress_discord_notice_dismiss() {
+
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( 'Unauthorized user', 401 );
+			exit();
+		}
+
+		// Check for nonce security
+		if ( ! wp_verify_nonce( $_POST['ets_profilepress_discord_nonce'], 'ets-profilepress-discord-ajax-nonce' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+
+		update_user_meta( get_current_user_id(), '_ets_profilepress_discord_dismissed_notification', true );
+		$event_res = array(
+			'status'  => 1,
+			'message' => __( 'success', 'connect-profilepress-and-discord' ),
+		);
+		return wp_send_json( $event_res );
+
+		exit();
 	}
 
 }

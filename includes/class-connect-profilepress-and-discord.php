@@ -70,7 +70,7 @@ class Connect_Profilepress_And_Discord {
 		if ( defined( 'CONNECT_PROFILEPRESS_AND_DISCORD_VERSION' ) ) {
 			$this->version = CONNECT_PROFILEPRESS_AND_DISCORD_VERSION;
 		} else {
-			$this->version = '1.0.2';
+			$this->version = '1.0.3';
 		}
 		$this->plugin_name = 'connect-profilepress-and-discord';
 

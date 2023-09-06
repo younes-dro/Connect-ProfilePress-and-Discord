@@ -70,7 +70,7 @@ class Connect_Profilepress_And_Discord {
 		if ( defined( 'CONNECT_PROFILEPRESS_AND_DISCORD_VERSION' ) ) {
 			$this->version = CONNECT_PROFILEPRESS_AND_DISCORD_VERSION;
 		} else {
-			$this->version = '1.0.2';
+			$this->version = '1.0.3';
 		}
 		$this->plugin_name = 'connect-profilepress-and-discord';
 
@@ -138,6 +138,8 @@ class Connect_Profilepress_And_Discord {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-connect-profilepress-and-discord-public.php';
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-connect-profilepress-and-discord-admin-notices.php';
+
 		$this->loader = new Connect_Profilepress_And_Discord_Loader();
 
 	}
@@ -192,6 +194,7 @@ class Connect_Profilepress_And_Discord {
 		$this->loader->add_action( 'ppress_admin_customer_data_after_billing_address', $plugin_admin, 'ets_ppress_admin_customer_data_after_billing_address', 10, 2 );
 		// $this->loader->add_action( 'ppress_order_completed', $plugin_admin, 'ets_ppress_discord_order_completed' );
 		$this->loader->add_action( 'ppress_order_added', $plugin_admin, 'ets_ppress_discord_order_added', 10, 2 );
+		$this->loader->add_action( 'wp_ajax_ets_profilepress_discord_notice_dismiss', $plugin_admin, 'ets_profilepress_discord_notice_dismiss' );
 
 	}
 

@@ -1,11 +1,11 @@
 === Connect ProfilePress and Discord ===
-Contributors: expresstechsoftware, webbdeveloper, sunnysoni
+Contributors: expresstechsoftware, webbdeveloper, sunnysoni, vanbom
 Donate link: https://www.expresstechsoftwares.com
 Tags: discord, membership, ecommerce, user registration, user profile, membership plugin, members, member, users, profile, front-end profile, avatar
 Requires at least: 5.3
 Requires PHP: 7.2.0
-Tested up to: 6.4
-Stable tag: 1.0.4
+Tested up to: 6.5
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
